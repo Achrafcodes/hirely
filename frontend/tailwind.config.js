@@ -12,7 +12,7 @@ export default {
         'accent-hover':  '#4F46E5',
         'text-primary':  '#F4F4F5',
         'text-secondary':'#A1A1AA',
-        'text-disabled': '#52525B',
+        'text-disabled': '#838391',
         success:         '#16A34A',
         warning:         '#B45309',
         danger:          '#B91C1C',

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -122,7 +120,7 @@ html.light .bg-text-disabled\/10  { background-color: rgba(82,82,91,0.10) !impor
 /* Text */
 html.light .text-text-primary     { color: #18181B !important; }
 html.light .text-text-secondary   { color: #52525B !important; }
-html.light .text-text-disabled    { color: #A1A1AA !important; }
+html.light .text-text-disabled    { color: #6F6F80 !important; }
 
 /* Borders */
 html.light .border-border         { border-color: #E2E2E8 !important; }
@@ -155,6 +153,19 @@ html.light footer { background-color: #FAFAFC !important; border-color: #E2E2E8 
 
 /* Mobile drawer in light */
 html.light .bg-surface { background-color: #FFFFFF !important; }
+
+/* Hover backgrounds in light mode */
+html.light .hover\:bg-surface-raised:hover { background-color: #F1F1F5 !important; }
+html.light .hover\:bg-surface:hover         { background-color: #FFFFFF !important; }
+html.light .hover\:bg-accent-hover:hover    { background-color: #4F46E5 !important; }
+html.light .hover\:bg-danger\/10:hover      { background-color: rgba(185,28,28,0.10) !important; }
+html.light .hover\:bg-danger\/20:hover      { background-color: rgba(185,28,28,0.20) !important; }
+
+/* Hover text colors in light mode */
+html.light .hover\:text-text-primary:hover   { color: #18181B !important; }
+html.light .hover\:text-text-secondary:hover { color: #52525B !important; }
+html.light .hover\:text-accent:hover         { color: #6366F1 !important; }
+html.light .hover\:text-accent-hover:hover   { color: #4F46E5 !important; }
 
 /* Form inputs in light mode */
 html.light input,
