@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-base text-text-primary font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+
+  #root { min-height: 100vh; }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-base;
+  }
+}
+
+@layer components {
+  .featured-card {
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+  .featured-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+    border-color: #3f3f46;
+  }
+
+  .job-card-border { position: relative; overflow: hidden; }
+  .job-card-border::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0; background-color: #6366F1;
+    border-radius: 8px 0 0 8px; transition: width 0.15s ease;
+  }
+  .job-card-border:hover::before { width: 3px; }
+
+  .hero-gradient { background: var(--hero-gradient, radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.18) 0%, transparent 70%)); }
+
+  .glow-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .reveal-left { opacity: 0; transform: translateX(-24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+  .shine { position: relative; overflow: hidden; }
+  .shine::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform: skewX(-20deg); transition: left 0.5s ease;
+  }
+  .shine:hover::after { left: 150%; }
+}
+
+/* ── Entrance animation ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.55s ease forwards;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes pulse_glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes drift {
+  0%   { transform: translate(0,0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.4; }
+  90%  { opacity: 0.4; }
+  100% { transform: translate(var(--dx, 40px), var(--dy, -60px)) rotate(360deg); opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   LIGHT MODE OVERRIDES
+   These override the compiled Tailwind classes
+   and hot-reload instantly via Vite HMR
+══════════════════════════════════════════ */
+
+/* Transition for smooth theme switch */
+html.light body,
+html.light #root {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Backgrounds */
+html.light body                   { background-color: #FAFAFC !important; color: #18181B !important; }
+html.light .bg-base               { background-color: #FAFAFC !important; }
+html.light .bg-base\/80           { background-color: rgba(250,250,252,0.8) !important; }
+html.light .bg-surface            { background-color: #FFFFFF !important; }
+html.light .bg-surface\/80        { background-color: rgba(255,255,255,0.8) !important; }
+html.light .bg-surface-raised     { background-color: #F1F1F5 !important; }
+html.light .bg-accent\/10         { background-color: rgba(99,102,241,0.10) !important; }
+html.light .bg-accent\/15         { background-color: rgba(99,102,241,0.15) !important; }
+html.light .bg-accent\/30         { background-color: rgba(99,102,241,0.30) !important; }
+html.light .bg-danger\/10         { background-color: rgba(185,28,28,0.10) !important; }
+html.light .bg-success\/10        { background-color: rgba(22,163,74,0.10) !important; }
+html.light .bg-success\/20        { background-color: rgba(22,163,74,0.20) !important; }
+html.light .bg-warning\/10        { background-color: rgba(180,83,9,0.10) !important; }
+html.light .bg-text-disabled\/10  { background-color: rgba(82,82,91,0.10) !important; }
+
+/* Text */
+html.light .text-text-primary     { color: #18181B !important; }
+html.light .text-text-secondary   { color: #52525B !important; }
+html.light .text-text-disabled    { color: #A1A1AA !important; }
+
+/* Borders */
+html.light .border-border         { border-color: #E2E2E8 !important; }
+html.light .border-border\/60     { border-color: rgba(226,226,232,0.6) !important; }
+html.light .border-border\/20     { border-color: rgba(226,226,232,0.2) !important; }
+
+/* Navbar / header backdrop */
+html.light header                 { background-color: rgba(250,250,252,0.85) !important; border-color: #E2E2E8 !important; }
+
+/* Featured card hover in light */
+html.light .featured-card:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10) !important;
+  border-color: #A1A1AA !important;
+}
+
+/* Ring offset */
+html.light .ring-offset-base      { --tw-ring-offset-color: #FAFAFC; }
+html.light .ring-offset-surface   { --tw-ring-offset-color: #FFFFFF; }
+
+/* Hero gradient in light */
+html.light .hero-gradient {
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.08) 0%, transparent 70%) !important;
+}
+
+/* Glow orbs lighter in light mode */
+html.light .glow-orb { opacity: 0.4 !important; }
+
+/* Footer in light */
+html.light footer { background-color: #FAFAFC !important; border-color: #E2E2E8 !important; }
+
+/* Mobile drawer in light */
+html.light .bg-surface { background-color: #FFFFFF !important; }
+
+/* Form inputs in light mode */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #FFFFFF !important;
+  border-color: #E2E2E8 !important;
+  color: #18181B !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder { color: #A1A1AA !important; }

@@ -1,0 +1,34 @@
+import axios from 'axios';
+
+const api = axios.create({ baseURL: 'http://localhost:5000/api' });
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Auth
+export const register = (data) => api.post('/auth/register', data);
+export const login = (data) => api.post('/auth/login', data);
+export const getMe = () => api.get('/auth/me');
+export const updateMe = (data) => api.patch('/auth/me', data);
+
+// Jobs
+export const getJobs = (params) => api.get('/jobs', { params });
+export const getMyJobs = () => api.get('/jobs/mine');
+export const getJob = (id) => api.get(`/jobs/${id}`);
+export const createJob = (data) => api.post('/jobs', data);
+export const updateJob = (id, data) => api.put(`/jobs/${id}`, data);
+export const deleteJob = (id) => api.delete(`/jobs/${id}`);
+export const getApplicants = (jobId, params) => api.get(`/jobs/${jobId}/applicants`, { params });
+
+// Applications
+export const applyToJob = (jobId, formData) =>
+  api.post(`/jobs/${jobId}/apply`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+export const getMyApplications = (params) => api.get('/applications/me', { params });
+export const updateApplicationStatus = (id, status) =>
+  api.patch(`/applications/${id}/status`, { status });
+export const withdrawApplication = (id) => api.delete(`/applications/${id}`);
