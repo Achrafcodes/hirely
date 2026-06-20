@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 
@@ -33,6 +34,7 @@ export default function RegisterPage() {
       }
       if (role === 'employer') payload.companyName = extra.companyName;
       const user = await register(payload);
+      toast.success('Account created!');
       navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const JOB_TYPES = ['full-time', 'part-time', 'contract', 'remote'];
 
@@ -7,11 +7,19 @@ const inputClass = `w-full rounded-lg bg-base border border-border px-3 py-2 tex
   focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1 focus:ring-offset-surface
   hover:border-text-disabled transition-colors`;
 
-export default function JobFilters({ onSearch, loading }) {
-  const [q, setQ] = useState('');
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState('');
-  const [skills, setSkills] = useState('');
+export default function JobFilters({ onSearch, loading, initialValues = {} }) {
+  const [q, setQ] = useState(initialValues.q || '');
+  const [location, setLocation] = useState(initialValues.location || '');
+  const [type, setType] = useState(initialValues.type || '');
+  const [skills, setSkills] = useState(initialValues.skills || '');
+
+  // Sync form when URL params change (back/forward navigation)
+  useEffect(() => {
+    setQ(initialValues.q || '');
+    setLocation(initialValues.location || '');
+    setType(initialValues.type || '');
+    setSkills(initialValues.skills || '');
+  }, [initialValues.q, initialValues.location, initialValues.type, initialValues.skills]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

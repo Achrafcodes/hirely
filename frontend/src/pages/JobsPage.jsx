@@ -1,41 +1,58 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getJobs } from '../api';
 import JobCard from '../components/jobs/JobCard';
 import JobFilters from '../components/jobs/JobFilters';
 
+function getFiltersFromParams(params) {
+  return {
+    q:        params.get('q')        || '',
+    location: params.get('location') || '',
+    type:     params.get('type')     || '',
+    skills:   params.get('skills')   || '',
+  };
+}
+
 export default function JobsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [jobs, setJobs] = useState([]);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({});
 
-  const fetchJobs = useCallback(async (f = filters, p = page) => {
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+  const filters = getFiltersFromParams(searchParams);
+
+  useEffect(() => {
+    let cancelled = false;
     setLoading(true);
-    try {
-      const res = await getJobs({ ...f, page: p, limit: 20 });
-      setJobs(res.data.jobs);
-      setTotal(res.data.total);
-      setPages(res.data.pages);
-    } catch {
-      // silently fail — user sees empty state
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, page]);
-
-  useEffect(() => { fetchJobs(); }, []);
+    getJobs({ ...filters, page, limit: 20 })
+      .then((res) => {
+        if (!cancelled) {
+          setJobs(res.data.jobs);
+          setTotal(res.data.total);
+          setPages(res.data.pages);
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [searchParams]);
 
   const handleSearch = (f) => {
-    setFilters(f);
-    setPage(1);
-    fetchJobs(f, 1);
+    const next = new URLSearchParams();
+    if (f.q)        next.set('q',        f.q);
+    if (f.location) next.set('location', f.location);
+    if (f.type)     next.set('type',     f.type);
+    if (f.skills)   next.set('skills',   f.skills);
+    setSearchParams(next);
   };
 
   const handlePage = (p) => {
-    setPage(p);
-    fetchJobs(filters, p);
+    const next = new URLSearchParams(searchParams);
+    if (p > 1) next.set('page', String(p));
+    else next.delete('page');
+    setSearchParams(next);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -46,7 +63,7 @@ export default function JobsPage() {
         <p className="text-body text-text-secondary mt-1">{total} open position{total !== 1 ? 's' : ''}</p>
       </div>
 
-      <JobFilters onSearch={handleSearch} loading={loading} />
+      <JobFilters onSearch={handleSearch} loading={loading} initialValues={filters} />
 
       <div className="mt-6 flex flex-col gap-3">
         {loading && (

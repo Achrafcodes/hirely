@@ -2,11 +2,23 @@ const router = require('express').Router();
 const verifyToken = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
 const loginRateLimiter = require('../middleware/loginRateLimiter');
+const validate = require('../middleware/validate');
 const { register, login, getMe, updateMe } = require('../controllers/authController');
 
-router.post('/register', asyncHandler(register));
+const profileLimits = validate({
+  name:        { max: 100,  label: 'Name' },
+  email:       { max: 254,  label: 'Email' },
+  password:    { max: 128,  label: 'Password' },
+  companyName: { max: 200,  label: 'Company name' },
+  companyDesc: { max: 2000, label: 'Company description' },
+  bio:         { max: 2000, label: 'Bio' },
+  website:     { max: 500,  label: 'Website' },
+  location:    { max: 200,  label: 'Location' },
+});
+
+router.post('/register', profileLimits, asyncHandler(register));
 router.post('/login', loginRateLimiter, asyncHandler(login));
 router.get('/me', verifyToken, asyncHandler(getMe));
-router.patch('/me', verifyToken, asyncHandler(updateMe));
+router.patch('/me', verifyToken, profileLimits, asyncHandler(updateMe));
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 
@@ -24,6 +25,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const user = await login(form);
+      toast.success(`Welcome back, ${user.name}!`);
       navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
     } catch (err) {
       setError(err.response?.data?.message || 'Sign in failed');
