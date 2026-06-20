@@ -7,6 +7,13 @@ exports.createJob = async (req, res) => {
     return res.status(400).json({ message: 'title, description, location, and type are required' });
   }
 
+  if (salaryMin !== undefined && (isNaN(salaryMin) || salaryMin < 0)) {
+    return res.status(400).json({ message: 'salaryMin must be a non-negative number' });
+  }
+  if (salaryMax !== undefined && (isNaN(salaryMax) || salaryMax < 0)) {
+    return res.status(400).json({ message: 'salaryMax must be a non-negative number' });
+  }
+
   const job = await Job.create({
     employer: req.user._id,
     title,
@@ -63,6 +70,13 @@ exports.updateJob = async (req, res) => {
   if (!job) return res.status(404).json({ message: 'Job not found' });
   if (job.employer.toString() !== req.user._id.toString()) {
     return res.status(403).json({ message: 'Not your job' });
+  }
+
+  if (req.body.salaryMin !== undefined && (isNaN(req.body.salaryMin) || req.body.salaryMin < 0)) {
+    return res.status(400).json({ message: 'salaryMin must be a non-negative number' });
+  }
+  if (req.body.salaryMax !== undefined && (isNaN(req.body.salaryMax) || req.body.salaryMax < 0)) {
+    return res.status(400).json({ message: 'salaryMax must be a non-negative number' });
   }
 
   const allowed = ['title', 'description', 'location', 'type', 'skills', 'salaryMin', 'salaryMax', 'status'];

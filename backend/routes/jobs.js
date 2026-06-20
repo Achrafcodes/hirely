@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const verifyToken = require('../middleware/auth');
 const requireRole = require('../middleware/requireRole');
+const asyncHandler = require('../middleware/asyncHandler');
 const upload = require('../middleware/upload');
 const {
   createJob,
@@ -13,13 +14,13 @@ const {
 } = require('../controllers/jobController');
 const { applyToJob } = require('../controllers/applicationController');
 
-router.get('/', getJobs);
-router.get('/mine', verifyToken, requireRole('employer'), getMyJobs);
-router.get('/:id', getJob);
-router.post('/', verifyToken, requireRole('employer'), createJob);
-router.put('/:id', verifyToken, requireRole('employer'), updateJob);
-router.delete('/:id', verifyToken, requireRole('employer'), deleteJob);
-router.get('/:id/applicants', verifyToken, requireRole('employer'), getApplicants);
-router.post('/:id/apply', verifyToken, requireRole('candidate'), upload.single('resume'), applyToJob);
+router.get('/',                                                            asyncHandler(getJobs));
+router.get('/mine',   verifyToken, requireRole('employer'),                asyncHandler(getMyJobs));
+router.get('/:id',                                                         asyncHandler(getJob));
+router.post('/',      verifyToken, requireRole('employer'),                asyncHandler(createJob));
+router.put('/:id',    verifyToken, requireRole('employer'),                asyncHandler(updateJob));
+router.delete('/:id', verifyToken, requireRole('employer'),                asyncHandler(deleteJob));
+router.get('/:id/applicants', verifyToken, requireRole('employer'),        asyncHandler(getApplicants));
+router.post('/:id/apply', verifyToken, requireRole('candidate'), upload.single('resume'), asyncHandler(applyToJob));
 
 module.exports = router;
