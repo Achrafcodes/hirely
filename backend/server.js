@@ -44,6 +44,19 @@ app.use('/api/applications', require('./routes/applications'));
 
 // Global error handler — never leaks stack traces to clients
 app.use((err, req, res, _next) => {
+  // Mongoose validation error (e.g. enum mismatch, required field)
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map((e) => e.message).join(', ');
+    return res.status(400).json({ message });
+  }
+  // Mongoose bad ObjectId
+  if (err.name === 'CastError') {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+  // Multer file size limit
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ message: 'File too large. Maximum size is 5 MB.' });
+  }
   const status = err.status || err.statusCode || 500;
   const message = status < 500 ? err.message : 'Internal server error';
   res.status(status).json({ message });

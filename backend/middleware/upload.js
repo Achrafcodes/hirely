@@ -13,7 +13,9 @@ const fileFilter = (_, file, cb) => {
   const allowed = ['.pdf', '.doc', '.docx'];
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowed.includes(ext)) return cb(null, true);
-  cb(new Error('Only PDF and Word documents are allowed'));
+  const err = new Error('Only PDF and Word documents are allowed');
+  err.status = 400;
+  cb(err);
 };
 
 module.exports = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
