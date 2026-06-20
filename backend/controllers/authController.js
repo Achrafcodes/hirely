@@ -12,6 +12,14 @@ exports.register = async (req, res) => {
     return res.status(400).json({ message: 'name, email, password, and role are required' });
   }
 
+  if (typeof email !== 'string' || typeof password !== 'string' || typeof name !== 'string') {
+    return res.status(400).json({ message: 'Invalid input types' });
+  }
+
+  if (!['employer', 'candidate'].includes(role)) {
+    return res.status(400).json({ message: 'role must be employer or candidate' });
+  }
+
   const exists = await User.findOne({ email });
   if (exists) return res.status(409).json({ message: 'Email already registered' });
 
@@ -35,6 +43,10 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ message: 'email and password are required' });
+  }
+
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    return res.status(400).json({ message: 'Invalid credentials' });
   }
 
   const user = await User.findOne({ email });
