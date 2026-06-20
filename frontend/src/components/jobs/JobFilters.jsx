@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const JOB_TYPES = ['full-time', 'part-time', 'contract', 'remote'];
 const SORT_OPTIONS = [
@@ -13,52 +13,86 @@ const inputClass = `w-full rounded-lg bg-surface-raised border border-border px-
   focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent
   hover:border-text-disabled transition-colors`;
 
-const selectClass = `${inputClass} appearance-none cursor-pointer`;
+const ChevronIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
 
-function SelectWrapper({ value, onChange, children, placeholder }) {
+function CustomSelect({ value, onChange, options, placeholder }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const selected = options.find((o) => o.value === value);
+  const label = selected ? selected.label : placeholder;
+
   return (
-    <div className="relative">
-      <select value={value} onChange={onChange} className={selectClass}>
-        {placeholder && <option value="">{placeholder}</option>}
-        {children}
-      </select>
-      <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-disabled">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </div>
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={`${inputClass} flex items-center justify-between gap-2 text-left ${!selected ? 'text-text-disabled' : ''}`}
+      >
+        <span>{label}</span>
+        <span className={`text-text-disabled transition-transform duration-150 ${open ? 'rotate-180' : ''}`}>
+          <ChevronIcon />
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full bg-surface-raised border border-border rounded-lg shadow-modal overflow-hidden">
+          {placeholder && (
+            <button
+              type="button"
+              onClick={() => { onChange(''); setOpen(false); }}
+              className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface ${!value ? 'text-accent' : 'text-text-secondary'}`}
+            >
+              {placeholder}
+            </button>
+          )}
+          {options.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface flex items-center justify-between ${value === o.value ? 'text-accent' : 'text-text-primary'}`}
+            >
+              {o.label}
+              {value === o.value && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 function NumberInput({ value, onChange, placeholder }) {
-  const dec = () => { const v = Math.max(0, (parseInt(value) || 0) - 1000); onChange({ target: { value: String(v) } }); };
-  const inc = () => { const v = (parseInt(value) || 0) + 1000; onChange({ target: { value: String(v) } }); };
+  const dec = () => { const v = Math.max(0, (parseInt(value) || 0) - 1000); onChange(String(v)); };
+  const inc = () => { const v = (parseInt(value) || 0) + 1000; onChange(String(v)); };
 
   return (
     <div className="relative flex items-center">
-      <button
-        type="button"
-        onClick={dec}
-        className="absolute left-2 w-5 h-5 flex items-center justify-center rounded text-text-disabled hover:text-text-primary hover:bg-surface transition-colors text-base leading-none"
-      >
-        −
-      </button>
+      <button type="button" onClick={dec} className="absolute left-2 w-5 h-5 flex items-center justify-center rounded text-text-disabled hover:text-text-primary hover:bg-surface transition-colors text-base leading-none">−</button>
       <input
         type="number"
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         min={0}
         className={`${inputClass} px-8 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
       />
-      <button
-        type="button"
-        onClick={inc}
-        className="absolute right-2 w-5 h-5 flex items-center justify-center rounded text-text-disabled hover:text-text-primary hover:bg-surface transition-colors text-base leading-none"
-      >
-        +
-      </button>
+      <button type="button" onClick={inc} className="absolute right-2 w-5 h-5 flex items-center justify-center rounded text-text-disabled hover:text-text-primary hover:bg-surface transition-colors text-base leading-none">+</button>
     </div>
   );
 }
@@ -93,37 +127,32 @@ export default function JobFilters({ onSearch, loading, initialValues = {} }) {
     onSearch({});
   };
 
+  const typeOptions = JOB_TYPES.map((t) => ({ value: t, label: formatType(t) }));
+
   const activeFilters = [
-    type      && { key: 'type',      label: formatType(type),         clear: () => { setType('');      onSearch({ q, location, type: '',      skills, salaryMin, salaryMax, sort }); } },
-    skills    && { key: 'skills',    label: `Skills: ${skills}`,      clear: () => { setSkills('');    onSearch({ q, location, type, skills: '',    salaryMin, salaryMax, sort }); } },
-    salaryMin && { key: 'salaryMin', label: `Min $${salaryMin}`,      clear: () => { setSalaryMin(''); onSearch({ q, location, type, skills, salaryMin: '', salaryMax, sort }); } },
-    salaryMax && { key: 'salaryMax', label: `Max $${salaryMax}`,      clear: () => { setSalaryMax(''); onSearch({ q, location, type, skills, salaryMin, salaryMax: '', sort }); } },
+    type      && { key: 'type',      label: formatType(type),    clear: () => { setType('');      onSearch({ q, location, type: '',   skills, salaryMin, salaryMax, sort }); } },
+    skills    && { key: 'skills',    label: `Skills: ${skills}`, clear: () => { setSkills('');    onSearch({ q, location, type, skills: '',   salaryMin, salaryMax, sort }); } },
+    salaryMin && { key: 'salaryMin', label: `Min $${salaryMin}`, clear: () => { setSalaryMin(''); onSearch({ q, location, type, skills, salaryMin: '', salaryMax, sort }); } },
+    salaryMax && { key: 'salaryMax', label: `Max $${salaryMax}`, clear: () => { setSalaryMax(''); onSearch({ q, location, type, skills, salaryMin, salaryMax: '', sort }); } },
     sort !== 'newest' && { key: 'sort', label: SORT_OPTIONS.find(s => s.value === sort)?.label, clear: () => { setSort('newest'); onSearch({ q, location, type, skills, salaryMin, salaryMax, sort: 'newest' }); } },
   ].filter(Boolean);
 
   return (
     <div className="bg-surface rounded-xl border border-border p-4">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        {/* Row 1 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <input className={inputClass} placeholder="Search jobs…" value={q} onChange={(e) => setQ(e.target.value)} />
           <input className={inputClass} placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
-          <SelectWrapper value={type} onChange={(e) => setType(e.target.value)} placeholder="All types">
-            {JOB_TYPES.map((t) => <option key={t} value={t}>{formatType(t)}</option>)}
-          </SelectWrapper>
+          <CustomSelect value={type} onChange={setType} options={typeOptions} placeholder="All types" />
           <input className={inputClass} placeholder="Skills (e.g. React, Node.js)" value={skills} onChange={(e) => setSkills(e.target.value)} />
         </div>
 
-        {/* Row 2 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <NumberInput value={salaryMin} onChange={(e) => setSalaryMin(e.target.value)} placeholder="Min salary ($)" />
-          <NumberInput value={salaryMax} onChange={(e) => setSalaryMax(e.target.value)} placeholder="Max salary ($)" />
-          <SelectWrapper value={sort} onChange={(e) => setSort(e.target.value)}>
-            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </SelectWrapper>
+          <NumberInput value={salaryMin} onChange={setSalaryMin} placeholder="Min salary ($)" />
+          <NumberInput value={salaryMax} onChange={setSalaryMax} placeholder="Max salary ($)" />
+          <CustomSelect value={sort} onChange={setSort} options={SORT_OPTIONS} />
         </div>
 
-        {/* Active chips + actions */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex flex-wrap gap-2">
             {activeFilters.map((f) => (
@@ -134,18 +163,10 @@ export default function JobFilters({ onSearch, loading, initialValues = {} }) {
             ))}
           </div>
           <div className="flex gap-2 ml-auto">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="px-4 py-1.5 text-sm text-text-secondary hover:text-text-primary rounded-full border border-border hover:border-text-disabled transition-colors"
-            >
+            <button type="button" onClick={handleReset} className="px-4 py-1.5 text-sm text-text-secondary hover:text-text-primary rounded-full border border-border hover:border-text-disabled transition-colors">
               Reset
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
-            >
+            <button type="submit" disabled={loading} className="px-4 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40">
               Search
             </button>
           </div>
