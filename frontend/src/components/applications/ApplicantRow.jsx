@@ -34,21 +34,14 @@ export default function ApplicantRow({ application, onStatusChange }) {
             </div>
             <div className="flex items-center gap-3 shrink-0">
               {resumeUrl && (
-                <button
-                  onClick={async () => {
-                    const base = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
-                    const token = localStorage.getItem('token');
-                    const res = await fetch(`${base}${resumeUrl}`, {
-                      headers: { Authorization: `Bearer ${token}` },
-                    });
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
-                    window.open(url, '_blank');
-                  }}
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-accent hover:text-accent-hover transition-colors font-medium"
                 >
                   Resume ↗
-                </button>
+                </a>
               )}
               <select
                 value={status}

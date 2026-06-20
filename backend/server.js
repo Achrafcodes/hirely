@@ -31,19 +31,6 @@ app.use(express.json({ limit: '10kb' }));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
-// Protect uploaded files — must carry a valid JWT to download
-app.use('/uploads', (req, res, next) => {
-  const header = req.headers.authorization;
-  if (!header || !header.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  try {
-    jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ message: 'Unauthorized' });
-  }
-}, express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth',         require('./routes/auth'));
 app.use('/api/jobs',         require('./routes/jobs'));

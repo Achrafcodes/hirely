@@ -1,9 +1,8 @@
-const fs = require('fs');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
 
 function cleanupFile(file) {
-  if (file?.path) fs.unlink(file.path, () => {});
+  // Cloudinary uploads are cleaned up automatically on error; no local file to delete
 }
 
 exports.applyToJob = async (req, res) => {
@@ -24,7 +23,7 @@ exports.applyToJob = async (req, res) => {
   }
 
   // Use uploaded file if provided, fall back to resume on profile
-  const resumeUrl = req.file ? `/uploads/${req.file.filename}` : req.user.resumeUrl;
+  const resumeUrl = req.file ? req.file.path : req.user.resumeUrl;
   if (!resumeUrl) {
     return res.status(400).json({ message: 'No resume provided' });
   }
