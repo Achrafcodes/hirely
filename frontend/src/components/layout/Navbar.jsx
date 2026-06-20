@@ -86,7 +86,7 @@ export default function Navbar() {
 
             {/* Desktop right actions */}
             <div className="hidden md:flex items-center gap-1.5 shrink-0">
-              <button onClick={toggleTheme} aria-label="Toggle theme"
+              <button onClick={toggleTheme} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                 className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-all duration-150 active:scale-90">
                 {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
               </button>
@@ -111,7 +111,7 @@ export default function Navbar() {
 
             {/* Mobile: theme + burger */}
             <div className="flex md:hidden items-center gap-1">
-              <button onClick={toggleTheme} aria-label="Toggle theme"
+              <button onClick={toggleTheme} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                 className="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:bg-surface-raised transition-all active:scale-90">
                 {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
               </button>
@@ -134,7 +134,11 @@ export default function Navbar() {
       )}
 
       {/* Mobile drawer */}
-      <div className={`fixed top-14 right-0 bottom-0 z-40 w-72 bg-surface border-l border-border flex flex-col md:hidden
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className={`fixed top-14 right-0 bottom-0 z-40 w-72 bg-surface border-l border-border flex flex-col md:hidden
         transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}>
 
         {/* Nav links */}

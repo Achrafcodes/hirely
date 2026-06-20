@@ -22,12 +22,31 @@ const ChevronIcon = () => (
 function CustomSelect({ value, onChange, options, placeholder }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const allOptions = placeholder ? [{ value: '', label: placeholder }, ...options] : options;
+  const currentIndex = allOptions.findIndex((o) => o.value === value);
 
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') { setOpen(false); return; }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen((o) => !o); return; }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = allOptions[(currentIndex + 1) % allOptions.length];
+      onChange(next.value);
+      setOpen(true);
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prev = allOptions[(currentIndex - 1 + allOptions.length) % allOptions.length];
+      onChange(prev.value);
+      setOpen(true);
+    }
+  };
 
   const selected = options.find((o) => o.value === value);
   const label = selected ? selected.label : placeholder;
@@ -37,6 +56,9 @@ function CustomSelect({ value, onChange, options, placeholder }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        onKeyDown={handleKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         className={`${inputClass} flex items-center justify-between gap-2 text-left ${!selected ? 'text-text-disabled' : ''}`}
       >
         <span>{label}</span>
@@ -46,10 +68,12 @@ function CustomSelect({ value, onChange, options, placeholder }) {
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1 w-full bg-surface-raised border border-border rounded-lg shadow-modal overflow-hidden">
+        <div role="listbox" className="absolute z-50 mt-1 w-full bg-surface-raised border border-border rounded-lg shadow-modal overflow-hidden">
           {placeholder && (
             <button
               type="button"
+              role="option"
+              aria-selected={!value}
               onClick={() => { onChange(''); setOpen(false); }}
               className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface ${!value ? 'text-accent' : 'text-text-secondary'}`}
             >
@@ -60,6 +84,8 @@ function CustomSelect({ value, onChange, options, placeholder }) {
             <button
               key={o.value}
               type="button"
+              role="option"
+              aria-selected={value === o.value}
               onClick={() => { onChange(o.value); setOpen(false); }}
               className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface flex items-center justify-between ${value === o.value ? 'text-accent' : 'text-text-primary'}`}
             >

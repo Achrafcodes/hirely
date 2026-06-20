@@ -11,6 +11,7 @@ import EmployerDashboard from './pages/employer/EmployerDashboard';
 import ApplicantsPage from './pages/employer/ApplicantsPage';
 import CandidateDashboard from './pages/candidate/CandidateDashboard';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -53,7 +54,7 @@ export default function App() {
           <ProtectedRoute role="candidate"><CandidateDashboard /></ProtectedRoute>
         } />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

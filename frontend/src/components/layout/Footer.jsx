@@ -14,8 +14,6 @@ const socials = [
 
 const cols = [
   { heading: 'Product', items: [{ label: 'Find Jobs', to: '/jobs' }, { label: 'Post a Job', to: '/register' }, { label: 'Dashboard', to: '/dashboard/candidate' }, { label: 'Profile', to: '/profile' }] },
-  { heading: 'Company', items: [{ label: 'About', to: '/' }, { label: 'Blog', to: '/' }, { label: 'Careers', to: '/jobs' }, { label: 'Press', to: '/' }] },
-  { heading: 'Legal',   items: [{ label: 'Privacy', to: '/' }, { label: 'Terms', to: '/' }, { label: 'Cookie Policy', to: '/' }, { label: 'Contact', to: '/' }] },
 ];
 
 export default function Footer() {
@@ -68,7 +66,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="py-5 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-caption text-text-disabled">© {new Date().getFullYear()} Hirely, Inc. All rights reserved.</p>
+          <p className="text-caption text-text-disabled">© {new Date().getFullYear()} Hirely. All rights reserved.</p>
           <div className="flex items-center gap-1 text-caption text-text-disabled">
             <span>Built with</span>
             <span className="text-accent">♥</span>

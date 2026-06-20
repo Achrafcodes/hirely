@@ -45,9 +45,13 @@ export default function JobDetailPage() {
   const [resumeFile, setResumeFile] = useState(null);
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    getJob(id).then((r) => setJob(r.data.job)).finally(() => setLoading(false));
+    getJob(id)
+      .then((r) => setJob(r.data.job))
+      .catch(() => setLoadError(true))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleApply = async (e) => {
@@ -77,10 +81,14 @@ export default function JobDetailPage() {
     );
   }
 
-  if (!job) {
+  if (loadError || !job) {
     return (
       <div className="text-center py-32">
-        <p className="text-h3 text-text-disabled">Job not found</p>
+        <p className="text-h3 text-text-disabled mb-2">{loadError ? 'Failed to load job' : 'Job not found'}</p>
+        <p className="text-sm text-text-secondary mb-6">{loadError ? 'Check your connection and try again.' : 'This role may have been removed.'}</p>
+        <button onClick={() => window.location.reload()} className="text-sm text-accent hover:text-accent-hover font-medium transition-colors">
+          {loadError ? 'Retry' : 'Browse all jobs →'}
+        </button>
       </div>
     );
   }
@@ -88,6 +96,13 @@ export default function JobDetailPage() {
   const companyName = job.employer?.companyName || job.employer?.name;
   const salary = formatSalary(job.salaryMin, job.salaryMax);
   const postedDate = new Date(job.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const typeLabel = job.type ? job.type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : null;
+
+  // Dynamic page title
+  useEffect(() => {
+    if (job) document.title = `${job.title} at ${companyName} — Hirely`;
+    return () => { document.title = 'Hirely — Find Work That Matters'; };
+  }, [job, companyName]);
 
   return (
     <div className="max-w-3xl animate-fade-in-up" style={{ animationDelay: '0ms' }}>
@@ -127,7 +142,7 @@ export default function JobDetailPage() {
 
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-border">
-          <Badge type={job.type}>{job.type}</Badge>
+          {typeLabel && <Badge type={job.type}>{typeLabel}</Badge>}
           {job.location && (
             <span className="flex items-center gap-1.5 text-sm text-text-secondary">
               <PinIcon /> {job.location}
