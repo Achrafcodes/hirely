@@ -35,7 +35,7 @@ export default function ApplicantRow({ application, onStatusChange }) {
             <div className="flex items-center gap-3 shrink-0">
               {resumeUrl && (
                 <a
-                  href={`http://localhost:5000${resumeUrl}`}
+                  href={`${(import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '')}${resumeUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-accent hover:text-accent-hover transition-colors font-medium"

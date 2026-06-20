@@ -44,6 +44,10 @@ app.use('/api/applications', require('./routes/applications'));
 
 // Global error handler — never leaks stack traces to clients
 app.use((err, req, res, _next) => {
+  // MongoDB duplicate key (e.g. duplicate application)
+  if (err.code === 11000) {
+    return res.status(409).json({ message: 'Duplicate entry' });
+  }
   // Mongoose validation error (e.g. enum mismatch, required field)
   if (err.name === 'ValidationError') {
     const message = Object.values(err.errors).map((e) => e.message).join(', ');

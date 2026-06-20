@@ -13,15 +13,19 @@ const PinIcon = () => (
 export default function EmployerDashboard() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const fetchMyJobs = async () => {
     setLoading(true);
+    setError('');
     try {
       const res = await getMyJobs();
       setJobs(res.data.jobs);
+    } catch {
+      setError('Failed to load your jobs. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,19 +57,42 @@ export default function EmployerDashboard() {
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this job?')) return;
-    await deleteJob(id);
-    fetchMyJobs();
+    try {
+      await deleteJob(id);
+      fetchMyJobs();
+    } catch {
+      alert('Failed to delete job. Please try again.');
+    }
   };
 
   const handleToggleStatus = async (job) => {
-    await updateJob(job._id, { status: job.status === 'active' ? 'closed' : 'active' });
-    fetchMyJobs();
+    try {
+      await updateJob(job._id, { status: job.status === 'active' ? 'closed' : 'active' });
+      fetchMyJobs();
+    } catch {
+      alert('Failed to update job status. Please try again.');
+    }
   };
 
   if (loading) {
     return (
       <div className="flex justify-center py-32">
         <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-32 bg-surface rounded-xl border border-border">
+        <p className="text-h3 text-danger mb-2">Something went wrong</p>
+        <p className="text-sm text-text-secondary mb-4">{error}</p>
+        <button
+          onClick={fetchMyJobs}
+          className="text-sm text-accent hover:text-accent-hover font-medium transition-colors"
+        >
+          Try again
+        </button>
       </div>
     );
   }
@@ -87,11 +114,12 @@ export default function EmployerDashboard() {
         </button>
       </div>
 
-      {/* Job form */}
+      {/* Job form — key forces remount when switching between jobs */}
       {(showForm || editing) && (
         <div className="bg-surface rounded-xl border border-border p-6 mb-6">
           <h2 className="text-h3 text-text-primary mb-5">{editing ? 'Edit job' : 'New job'}</h2>
           <JobForm
+            key={editing?._id || 'new'}
             initial={editing || {}}
             onSubmit={editing ? handleUpdate : handleCreate}
             onCancel={() => { setShowForm(false); setEditing(null); }}
