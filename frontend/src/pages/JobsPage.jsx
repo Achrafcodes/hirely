@@ -6,10 +6,13 @@ import JobFilters from '../components/jobs/JobFilters';
 
 function getFiltersFromParams(params) {
   return {
-    q:        params.get('q')        || '',
-    location: params.get('location') || '',
-    type:     params.get('type')     || '',
-    skills:   params.get('skills')   || '',
+    q:         params.get('q')         || '',
+    location:  params.get('location')  || '',
+    type:      params.get('type')      || '',
+    skills:    params.get('skills')    || '',
+    salaryMin: params.get('salaryMin') || '',
+    salaryMax: params.get('salaryMax') || '',
+    sort:      params.get('sort')      || 'newest',
   };
 }
 
@@ -41,10 +44,13 @@ export default function JobsPage() {
 
   const handleSearch = (f) => {
     const next = new URLSearchParams();
-    if (f.q)        next.set('q',        f.q);
-    if (f.location) next.set('location', f.location);
-    if (f.type)     next.set('type',     f.type);
-    if (f.skills)   next.set('skills',   f.skills);
+    if (f.q)         next.set('q',         f.q);
+    if (f.location)  next.set('location',  f.location);
+    if (f.type)      next.set('type',      f.type);
+    if (f.skills)    next.set('skills',    f.skills);
+    if (f.salaryMin) next.set('salaryMin', f.salaryMin);
+    if (f.salaryMax) next.set('salaryMax', f.salaryMax);
+    if (f.sort && f.sort !== 'newest') next.set('sort', f.sort);
     setSearchParams(next);
   };
 

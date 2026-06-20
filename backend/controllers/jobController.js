@@ -30,7 +30,7 @@ exports.createJob = async (req, res) => {
 };
 
 exports.getJobs = async (req, res) => {
-  const { q, location, type, skills, page = 1, limit = 20 } = req.query;
+  const { q, location, type, skills, salaryMin, salaryMax, sort = 'newest', page = 1, limit = 20 } = req.query;
   const filter = { status: 'active' };
 
   if (q) filter.$text = { $search: q };
@@ -40,12 +40,19 @@ exports.getJobs = async (req, res) => {
     const skillList = skills.split(',').map((s) => s.trim()).filter(Boolean);
     if (skillList.length) filter.skills = { $all: skillList };
   }
+  if (salaryMin) filter.salaryMax = { $gte: Number(salaryMin) };
+  if (salaryMax) filter.salaryMin = { ...filter.salaryMin, $lte: Number(salaryMax) };
 
   const pageNum = Math.max(1, parseInt(page) || 1);
   const pageSize = Math.min(50, Math.max(1, parseInt(limit) || 20));
   const skip = (pageNum - 1) * pageSize;
 
-  const sortOrder = q ? { score: { $meta: 'textScore' } } : { createdAt: -1 };
+  let sortOrder;
+  if (q) sortOrder = { score: { $meta: 'textScore' } };
+  else if (sort === 'oldest') sortOrder = { createdAt: 1 };
+  else if (sort === 'salary') sortOrder = { salaryMax: -1 };
+  else sortOrder = { createdAt: -1 };
+
   const projection = q ? { score: { $meta: 'textScore' } } : {};
 
   const [jobs, total] = await Promise.all([
