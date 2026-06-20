@@ -13,6 +13,8 @@ export const register = (data) => api.post('/auth/register', data);
 export const login = (data) => api.post('/auth/login', data);
 export const getMe = () => api.get('/auth/me');
 export const updateMe = (data) => api.patch('/auth/me', data);
+export const verifyEmail = (token) => api.get(`/auth/verify-email/${token}`);
+export const resendVerification = () => api.post('/auth/resend-verification');
 
 // Jobs
 export const getJobs = (params) => api.get('/jobs', { params });

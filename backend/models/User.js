@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
     companyName: String,
     companyDesc: String,
     website: String,
+
+    // email verification
+    isVerified: { type: Boolean, default: false },
+    verificationToken: String,
+    verificationTokenExpiry: Date,
   },
   { timestamps: true }
 );

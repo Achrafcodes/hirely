@@ -3,7 +3,7 @@ const verifyToken = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
 const loginRateLimiter = require('../middleware/loginRateLimiter');
 const validate = require('../middleware/validate');
-const { register, login, getMe, updateMe } = require('../controllers/authController');
+const { register, login, getMe, updateMe, verifyEmail, resendVerification } = require('../controllers/authController');
 
 const profileLimits = validate({
   name:        { max: 100,  label: 'Name' },
@@ -18,6 +18,8 @@ const profileLimits = validate({
 
 router.post('/register', profileLimits, asyncHandler(register));
 router.post('/login', loginRateLimiter, asyncHandler(login));
+router.get('/verify-email/:token', asyncHandler(verifyEmail));
+router.post('/resend-verification', verifyToken, asyncHandler(resendVerification));
 router.get('/me', verifyToken, asyncHandler(getMe));
 router.patch('/me', verifyToken, profileLimits, asyncHandler(updateMe));
 

@@ -10,6 +10,7 @@ import ProfilePage from './pages/ProfilePage';
 import EmployerDashboard from './pages/employer/EmployerDashboard';
 import ApplicantsPage from './pages/employer/ApplicantsPage';
 import CandidateDashboard from './pages/candidate/CandidateDashboard';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -38,6 +39,7 @@ export default function App() {
 
         <Route path="login" element={<GuestRoute><LoginPage /></GuestRoute>} />
         <Route path="register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
+        <Route path="verify-email/:token" element={<VerifyEmailPage />} />
 
         <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
