@@ -12,10 +12,12 @@ export default function ApplicantsPage() {
   const [job, setJob] = useState(null);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
   const fetchApplicants = async (s = statusFilter) => {
     setLoading(true);
+    setError('');
     try {
       const [jobRes, appRes] = await Promise.all([
         getJob(id),
@@ -23,6 +25,8 @@ export default function ApplicantsPage() {
       ]);
       setJob(jobRes.data.job);
       setApplications(appRes.data.applications);
+    } catch {
+      setError('Failed to load applicants. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -31,8 +35,13 @@ export default function ApplicantsPage() {
   useEffect(() => { fetchApplicants(); }, []);
 
   const handleStatusChange = async (appId, status) => {
-    await updateApplicationStatus(appId, status);
-    fetchApplicants();
+    try {
+      await updateApplicationStatus(appId, status);
+      fetchApplicants();
+    } catch {
+      // Status update failed silently — refetch to show current state
+      fetchApplicants();
+    }
   };
 
   const handleFilterChange = (s) => {
@@ -80,6 +89,17 @@ export default function ApplicantsPage() {
       {loading ? (
         <div className="flex justify-center py-16">
           <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-24 bg-surface rounded-xl border border-border">
+          <p className="text-h3 text-danger mb-2">Something went wrong</p>
+          <p className="text-sm text-text-secondary mb-4">{error}</p>
+          <button
+            onClick={() => fetchApplicants()}
+            className="text-sm text-accent hover:text-accent-hover font-medium transition-colors"
+          >
+            Try again
+          </button>
         </div>
       ) : applications.length === 0 ? (
         <div className="text-center py-24 bg-surface rounded-xl border border-border">

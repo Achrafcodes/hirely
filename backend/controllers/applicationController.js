@@ -1,10 +1,21 @@
+const fs = require('fs');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
 
+function cleanupFile(file) {
+  if (file?.path) fs.unlink(file.path, () => {});
+}
+
 exports.applyToJob = async (req, res) => {
   const job = await Job.findById(req.params.id);
-  if (!job) return res.status(404).json({ message: 'Job not found' });
-  if (job.status === 'closed') return res.status(400).json({ message: 'Job is closed' });
+  if (!job) {
+    cleanupFile(req.file);
+    return res.status(404).json({ message: 'Job not found' });
+  }
+  if (job.status === 'closed') {
+    cleanupFile(req.file);
+    return res.status(400).json({ message: 'Job is closed' });
+  }
 
   // Use uploaded file if provided, fall back to resume on profile
   const resumeUrl = req.file ? `/uploads/${req.file.filename}` : req.user.resumeUrl;
@@ -13,7 +24,10 @@ exports.applyToJob = async (req, res) => {
   }
 
   const existing = await Application.findOne({ job: job._id, candidate: req.user._id });
-  if (existing) return res.status(409).json({ message: 'Already applied to this job' });
+  if (existing) {
+    cleanupFile(req.file);
+    return res.status(409).json({ message: 'Already applied to this job' });
+  }
 
   const application = await Application.create({
     job: job._id,
@@ -30,8 +44,8 @@ exports.getMyApplications = async (req, res) => {
   const filter = { candidate: req.user._id };
   if (status) filter.status = status;
 
-  const pageNum = Math.max(1, parseInt(page));
-  const pageSize = Math.min(50, Math.max(1, parseInt(limit)));
+  const pageNum = Math.max(1, parseInt(page) || 1);
+  const pageSize = Math.min(50, Math.max(1, parseInt(limit) || 20));
   const skip = (pageNum - 1) * pageSize;
 
   const [applications, total] = await Promise.all([
@@ -56,6 +70,7 @@ exports.updateStatus = async (req, res) => {
 
   const application = await Application.findById(req.params.id).populate('job');
   if (!application) return res.status(404).json({ message: 'Application not found' });
+  if (!application.job) return res.status(404).json({ message: 'Job no longer exists' });
   if (application.job.employer.toString() !== req.user._id.toString()) {
     return res.status(403).json({ message: 'Not your job' });
   }

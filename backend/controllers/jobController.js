@@ -1,4 +1,5 @@
 const Job = require('../models/Job');
+const escapeStringRegexp = require('escape-string-regexp');
 
 exports.createJob = async (req, res) => {
   const { title, description, location, type, skills, salaryMin, salaryMax } = req.body;
@@ -33,15 +34,15 @@ exports.getJobs = async (req, res) => {
   const filter = { status: 'active' };
 
   if (q) filter.$text = { $search: q };
-  if (location) filter.location = { $regex: location, $options: 'i' };
+  if (location) filter.location = { $regex: escapeStringRegexp(location), $options: 'i' };
   if (type) filter.type = type;
   if (skills) {
     const skillList = skills.split(',').map((s) => s.trim()).filter(Boolean);
     if (skillList.length) filter.skills = { $all: skillList };
   }
 
-  const pageNum = Math.max(1, parseInt(page));
-  const pageSize = Math.min(50, Math.max(1, parseInt(limit)));
+  const pageNum = Math.max(1, parseInt(page) || 1);
+  const pageSize = Math.min(50, Math.max(1, parseInt(limit) || 20));
   const skip = (pageNum - 1) * pageSize;
 
   const sortOrder = q ? { score: { $meta: 'textScore' } } : { createdAt: -1 };
@@ -116,8 +117,8 @@ exports.getApplicants = async (req, res) => {
   const filter = { job: job._id };
   if (status) filter.status = status;
 
-  const pageNum = Math.max(1, parseInt(page));
-  const pageSize = Math.min(50, Math.max(1, parseInt(limit)));
+  const pageNum = Math.max(1, parseInt(page) || 1);
+  const pageSize = Math.min(50, Math.max(1, parseInt(limit) || 20));
   const skip = (pageNum - 1) * pageSize;
 
   const [applications, total] = await Promise.all([
