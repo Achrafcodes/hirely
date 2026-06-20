@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { getMyJobs, createJob, updateJob, deleteJob } from '../../api';
 import JobForm from '../../components/jobs/JobForm';
 import Badge from '../../components/ui/Badge';
@@ -38,7 +39,10 @@ export default function EmployerDashboard() {
     try {
       await createJob(data);
       setShowForm(false);
+      toast.success('Job posted!');
       fetchMyJobs();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to post job');
     } finally {
       setSaving(false);
     }
@@ -49,7 +53,10 @@ export default function EmployerDashboard() {
     try {
       await updateJob(editing._id, data);
       setEditing(null);
+      toast.success('Job updated!');
       fetchMyJobs();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update job');
     } finally {
       setSaving(false);
     }
@@ -59,18 +66,20 @@ export default function EmployerDashboard() {
     if (!confirm('Delete this job?')) return;
     try {
       await deleteJob(id);
+      toast.success('Job deleted');
       fetchMyJobs();
     } catch {
-      alert('Failed to delete job. Please try again.');
+      toast.error('Failed to delete job. Please try again.');
     }
   };
 
   const handleToggleStatus = async (job) => {
     try {
       await updateJob(job._id, { status: job.status === 'active' ? 'closed' : 'active' });
+      toast.success(job.status === 'active' ? 'Job closed' : 'Job reopened');
       fetchMyJobs();
     } catch {
-      alert('Failed to update job status. Please try again.');
+      toast.error('Failed to update job status. Please try again.');
     }
   };
 

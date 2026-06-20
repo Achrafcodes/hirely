@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { getJob, applyToJob } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
@@ -60,6 +61,7 @@ export default function JobDetailPage() {
       await applyToJob(id, fd);
       setApplied(true);
       setShowApplyForm(false);
+      toast.success('Application submitted!');
     } catch (err) {
       setError(err.response?.data?.message || 'Application failed');
     } finally {

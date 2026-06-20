@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { getMyApplications, withdrawApplication } from '../../api';
 import ApplicationCard from '../../components/applications/ApplicationCard';
 
@@ -27,8 +28,13 @@ export default function CandidateDashboard() {
 
   const handleWithdraw = async (id) => {
     if (!confirm('Withdraw this application?')) return;
-    await withdrawApplication(id);
-    fetchApplications();
+    try {
+      await withdrawApplication(id);
+      toast.success('Application withdrawn');
+      fetchApplications();
+    } catch {
+      toast.error('Failed to withdraw application');
+    }
   };
 
   const handleFilterChange = (s) => {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -58,7 +59,7 @@ export default function Navbar() {
 
   const dashboardPath = user?.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate';
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = () => { logout(); toast.success('Signed out'); navigate('/'); };
 
   return (
     <>

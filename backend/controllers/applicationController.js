@@ -7,6 +7,12 @@ function cleanupFile(file) {
 }
 
 exports.applyToJob = async (req, res) => {
+  const { coverLetter } = req.body;
+  if (coverLetter && coverLetter.length > 5000) {
+    cleanupFile(req.file);
+    return res.status(400).json({ message: 'Cover letter must be 5000 characters or fewer' });
+  }
+
   const job = await Job.findById(req.params.id);
   if (!job) {
     cleanupFile(req.file);

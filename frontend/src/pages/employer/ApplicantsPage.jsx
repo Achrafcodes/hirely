@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { getJob, getApplicants, updateApplicationStatus } from '../../api';
 import ApplicantRow from '../../components/applications/ApplicantRow';
 import Badge from '../../components/ui/Badge';
@@ -37,9 +38,10 @@ export default function ApplicantsPage() {
   const handleStatusChange = async (appId, status) => {
     try {
       await updateApplicationStatus(appId, status);
+      toast.success('Status updated');
       fetchApplicants();
     } catch {
-      // Status update failed silently — refetch to show current state
+      toast.error('Failed to update status');
       fetchApplicants();
     }
   };

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 
@@ -14,7 +15,6 @@ export default function ProfilePage() {
     website: user?.website || '',
   });
   const [loading, setLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -23,14 +23,13 @@ export default function ProfilePage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSaved(false);
     try {
       const payload = { ...form };
       if (user.role === 'candidate') {
         payload.skills = form.skills.split(',').map((s) => s.trim()).filter(Boolean);
       }
       await updateUser(payload);
-      setSaved(true);
+      toast.success('Profile saved');
     } catch (err) {
       setError(err.response?.data?.message || 'Update failed');
     } finally {
@@ -91,7 +90,6 @@ export default function ProfilePage() {
           )}
 
           {error && <p className="text-sm text-danger">{error}</p>}
-          {saved && <p className="text-sm text-success">Profile saved</p>}
 
           <button
             type="submit"
