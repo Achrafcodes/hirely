@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const JOB_TYPES = ['full-time', 'part-time', 'contract', 'remote'];
+const formatType = (t) => t.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest first' },
   { value: 'oldest', label: 'Oldest first' },
@@ -44,7 +45,7 @@ export default function JobFilters({ onSearch, loading, initialValues = {} }) {
 
   // Active filter chips
   const activeFilters = [
-    type && { key: 'type', label: type, clear: () => { setType(''); onSearch({ q, location, type: '', skills, salaryMin, salaryMax, sort }); } },
+    type && { key: 'type', label: formatType(type), clear: () => { setType(''); onSearch({ q, location, type: '', skills, salaryMin, salaryMax, sort }); } },
     skills && { key: 'skills', label: `Skills: ${skills}`, clear: () => { setSkills(''); onSearch({ q, location, type, skills: '', salaryMin, salaryMax, sort }); } },
     salaryMin && { key: 'salaryMin', label: `Min $${salaryMin}`, clear: () => { setSalaryMin(''); onSearch({ q, location, type, skills, salaryMin: '', salaryMax, sort }); } },
     salaryMax && { key: 'salaryMax', label: `Max $${salaryMax}`, clear: () => { setSalaryMax(''); onSearch({ q, location, type, skills, salaryMin, salaryMax: '', sort }); } },
@@ -60,7 +61,7 @@ export default function JobFilters({ onSearch, loading, initialValues = {} }) {
           <select value={type} onChange={(e) => setType(e.target.value)} className={inputClass}>
             <option value="">All types</option>
             {JOB_TYPES.map((t) => (
-              <option key={t} value={t} className="capitalize">{t}</option>
+              <option key={t} value={t}>{formatType(t)}</option>
             ))}
           </select>
           <input className={inputClass} placeholder="Skills (e.g. React, Node.js)" value={skills} onChange={(e) => setSkills(e.target.value)} />

@@ -56,7 +56,7 @@ export default function JobCard({ job }) {
             </h3>
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
-            <Badge type={job.type}>{job.type}</Badge>
+            <Badge type={job.type}>{job.type.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</Badge>
             <span className="text-caption text-text-disabled">{timeAgo(job.createdAt)}</span>
           </div>
         </div>
