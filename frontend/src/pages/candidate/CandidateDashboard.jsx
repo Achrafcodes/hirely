@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { getMyApplications, withdrawApplication, getSavedJobs } from '../../api';
 import ApplicationCard from '../../components/applications/ApplicationCard';
 import JobCard from '../../components/jobs/JobCard';
+import { RowListSkeleton, JobListSkeleton } from '../../components/ui/Skeleton';
 import useSEO from '../../hooks/useSEO';
 import { useAuth } from '../../context/AuthContext';
 
@@ -121,9 +122,7 @@ export default function CandidateDashboard() {
       )}
 
       {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-        </div>
+        tab === 'applications' ? <RowListSkeleton count={4} /> : <JobListSkeleton count={4} grid />
       ) : error ? (
         <div className="text-center py-24 bg-surface rounded-xl border border-border">
           <p className="text-h3 text-danger mb-2">Something went wrong</p>

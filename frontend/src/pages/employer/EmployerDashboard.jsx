@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { getMyJobs, createJob, updateJob, deleteJob } from '../../api';
 import JobForm from '../../components/jobs/JobForm';
 import Badge from '../../components/ui/Badge';
+import { RowListSkeleton } from '../../components/ui/Skeleton';
 import useSEO from '../../hooks/useSEO';
 import { useAuth } from '../../context/AuthContext';
 
@@ -108,8 +109,9 @@ export default function EmployerDashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-32">
-        <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+      <div className="animate-fade-in-up">
+        <div className="h-9 w-40 bg-surface-raised rounded animate-pulse mb-8" />
+        <RowListSkeleton count={4} />
       </div>
     );
   }

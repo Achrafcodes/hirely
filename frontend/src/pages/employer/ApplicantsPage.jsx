@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { getJob, getApplicants, updateApplicationStatus } from '../../api';
 import ApplicantRow from '../../components/applications/ApplicantRow';
 import Badge from '../../components/ui/Badge';
+import { RowListSkeleton } from '../../components/ui/Skeleton';
 
 const STATUSES = ['', 'applied', 'reviewed', 'interview', 'rejected', 'hired'];
 
@@ -89,9 +90,7 @@ export default function ApplicantsPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-        </div>
+        <RowListSkeleton count={4} />
       ) : error ? (
         <div className="text-center py-24 bg-surface rounded-xl border border-border">
           <p className="text-h3 text-danger mb-2">Something went wrong</p>

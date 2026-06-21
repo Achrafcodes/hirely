@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCompanies } from '../api';
+import { CompanyListSkeleton } from '../components/ui/Skeleton';
 import useSEO from '../hooks/useSEO';
 
 const PinIcon = () => (
@@ -40,9 +41,7 @@ export default function CompaniesPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-        </div>
+        <CompanyListSkeleton count={6} />
       ) : error ? (
         <div className="text-center py-24 bg-surface rounded-xl border border-border">
           <p className="text-h3 text-danger mb-2">Something went wrong</p>

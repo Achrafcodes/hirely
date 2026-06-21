@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getJobs } from '../api';
 import JobCard from '../components/jobs/JobCard';
 import JobFilters from '../components/jobs/JobFilters';
+import { JobListSkeleton } from '../components/ui/Skeleton';
 import useSEO from '../hooks/useSEO';
 
 function getFiltersFromParams(params) {
@@ -75,11 +76,7 @@ export default function JobsPage() {
       <JobFilters onSearch={handleSearch} loading={loading} initialValues={filters} />
 
       <div className="mt-6 flex flex-col gap-3">
-        {loading && (
-          <div className="flex justify-center py-16">
-            <div className="w-6 h-6 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-          </div>
-        )}
+        {loading && <JobListSkeleton count={6} />}
 
         {!loading && jobs.length === 0 && (
           <div className="text-center py-24 bg-surface rounded-xl border border-border">

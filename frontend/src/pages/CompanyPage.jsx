@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getCompany } from '../api';
 import JobCard from '../components/jobs/JobCard';
 import ShareButton from '../components/ui/ShareButton';
+import { DetailSkeleton } from '../components/ui/Skeleton';
 import useSEO from '../hooks/useSEO';
 
 const PinIcon = () => (
@@ -43,11 +44,7 @@ export default function CompanyPage() {
   );
 
   if (loading) {
-    return (
-      <div className="flex justify-center py-32">
-        <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-      </div>
-    );
+    return <div className="animate-fade-in-up"><DetailSkeleton /></div>;
   }
 
   if (loadError || !company) {
