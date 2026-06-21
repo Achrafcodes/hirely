@@ -103,7 +103,7 @@ export default function Navbar() {
                   <Link to="/login" className="px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors duration-150">
                     Sign in
                   </Link>
-                  <Link to="/register" className="shine inline-flex items-center gap-1.5 bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-full transition-all duration-150 active:scale-[0.97]">
+                  <Link to="/register" className="shine inline-flex items-center gap-1.5 bg-accent hover:bg-accent-hover text-base text-sm font-medium px-4 py-1.5 rounded-md transition-all duration-150 active:scale-[0.97]">
                     Post a job
                   </Link>
                 </>
@@ -183,7 +183,7 @@ export default function Navbar() {
                 Sign in
               </Link>
               <Link to="/register"
-                className="w-full py-3 rounded-full text-sm font-semibold text-center bg-accent hover:bg-accent-hover text-white transition-all active:scale-[0.98]">
+                className="w-full py-3 rounded-md text-sm font-medium text-center bg-accent hover:bg-accent-hover text-base transition-all active:scale-[0.98]">
                 Post a job
               </Link>
             </>

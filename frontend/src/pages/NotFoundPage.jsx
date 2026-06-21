@@ -10,10 +10,10 @@ export default function NotFoundPage() {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="flex items-center justify-center gap-3 flex-wrap">
-          <Link to="/" className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]">
+          <Link to="/" className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]">
             Go home
           </Link>
-          <Link to="/jobs" className="border border-border text-text-secondary hover:text-text-primary hover:border-accent/40 font-medium px-6 py-2.5 rounded-full transition-all duration-150">
+          <Link to="/jobs" className="border border-border text-text-secondary hover:text-text-primary hover:border-accent/40 font-medium px-6 py-2.5 rounded-md transition-all duration-150">
             Browse jobs
           </Link>
         </div>

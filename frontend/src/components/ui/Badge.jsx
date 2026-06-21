@@ -1,18 +1,18 @@
 const statusStyles = {
-  applied: 'bg-accent/10 text-accent border-accent/20',
+  applied:  'bg-accent-dim text-accent-text border-accent/30',
   reviewed: 'bg-warning/10 text-warning border-warning/20',
-  interview: 'bg-success/10 text-success border-success/20',
+  interview:'bg-success/10 text-success border-success/20',
   rejected: 'bg-danger/10 text-danger border-danger/20',
-  hired: 'bg-success/20 text-success border-success/30',
-  active: 'bg-success/10 text-success border-success/20',
-  closed: 'bg-text-disabled/10 text-text-disabled border-text-disabled/20',
+  hired:    'bg-success/20 text-success border-success/30',
+  active:   'bg-success/10 text-success border-success/20',
+  closed:   'bg-text-disabled/10 text-text-disabled border-text-disabled/20',
 };
 
 const typeStyles = {
   'full-time': 'bg-surface-raised text-text-secondary border-border',
   'part-time': 'bg-surface-raised text-text-secondary border-border',
-  contract: 'bg-surface-raised text-text-secondary border-border',
-  remote: 'bg-accent/10 text-accent border-accent/20',
+  contract:    'bg-surface-raised text-text-secondary border-border',
+  remote:      'bg-accent-dim text-accent-text border-accent/30',
 };
 
 export default function Badge({ children, status, type, className = '' }) {
@@ -24,7 +24,7 @@ export default function Badge({ children, status, type, className = '' }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-caption font-medium capitalize ${style} ${className}`}
+      className={`inline-flex items-center rounded-sm border px-2 py-0.5 font-mono text-caption uppercase tracking-wider ${style} ${className}`}
     >
       {children}
     </span>

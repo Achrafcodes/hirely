@@ -78,10 +78,10 @@ export default function ApplicantsPage() {
           <button
             key={s || 'all'}
             onClick={() => handleFilterChange(s)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-150 capitalize ${
+            className={`px-3 py-1.5 rounded-sm font-mono text-caption uppercase tracking-wider transition-all duration-150 ${
               statusFilter === s
-                ? 'bg-accent text-white'
-                : 'bg-surface border border-border text-text-secondary hover:text-text-primary hover:border-accent/50'
+                ? 'bg-accent-dim text-accent-text border border-accent/50'
+                : 'bg-surface border border-border text-text-secondary hover:border-accent hover:text-accent'
             }`}
           >
             {s || 'All'}

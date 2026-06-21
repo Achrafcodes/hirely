@@ -70,7 +70,7 @@ function AuthModal({ onClose, onSuccess }) {
           <input className={inputCls} type="password" placeholder="Password" value={form.password} onChange={set('password')} required />
           {error && <p className="text-sm text-danger">{error}</p>}
           <button type="submit" disabled={busy}
-            className="w-full py-2.5 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-all active:scale-[0.97] disabled:opacity-40 mt-1">
+            className="w-full py-2.5 rounded-md bg-accent hover:bg-accent-hover text-base text-sm font-semibold transition-all active:scale-[0.97] disabled:opacity-40 mt-1">
             {busy ? (tab === 'login' ? 'Signing in…' : 'Creating account…') : (tab === 'login' ? 'Sign in & continue' : 'Create account & continue')}
           </button>
         </form>
@@ -339,14 +339,14 @@ export default function JobDetailPage() {
                   <button
                     type="submit"
                     disabled={applying}
-                    className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
+                    className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
                   >
                     {applying ? 'Submitting…' : 'Submit application'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowApplyForm(false)}
-                    className="text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-full transition-colors"
+                    className="text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-md transition-colors"
                   >
                     Cancel
                   </button>
@@ -358,13 +358,13 @@ export default function JobDetailPage() {
                   <button
                     onClick={handleApply}
                     disabled={applying}
-                    className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
+                    className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
                   >
                     {applying ? 'Applying…' : 'Apply with profile resume'}
                   </button>
                   <button
                     onClick={() => setShowApplyForm(true)}
-                    className="text-sm text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-full border border-border hover:border-text-disabled transition-colors"
+                    className="text-sm text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-md border border-border hover:border-text-disabled transition-colors"
                   >
                     Add cover letter / different resume
                   </button>
@@ -377,7 +377,7 @@ export default function JobDetailPage() {
             ) : (
               <button
                 onClick={() => setShowApplyForm(true)}
-                className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]"
+                className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
               >
                 Apply now
               </button>
@@ -389,7 +389,7 @@ export default function JobDetailPage() {
           <div className="pt-6">
             <button
               onClick={() => setShowAuthModal(true)}
-              className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]"
+              className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
             >
               Apply now
             </button>

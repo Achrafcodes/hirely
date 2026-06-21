@@ -5,7 +5,7 @@ export function Skeleton({ className = '' }) {
 /* ---- Job card (used on /jobs, saved, company pages, related) ---- */
 export function JobCardSkeleton() {
   return (
-    <div className="bg-surface rounded-xl border border-border shadow-card p-5">
+    <div className="bg-surface rounded-lg border border-border shadow-card p-4">
       <div className="flex items-start gap-3 mb-3">
         <Skeleton className="w-10 h-10 rounded-lg shrink-0" />
         <div className="flex-1 min-w-0 flex flex-col gap-2">
@@ -40,7 +40,7 @@ export function JobListSkeleton({ count = 6, grid = false }) {
 /* ---- Company card (used on /companies) ---- */
 export function CompanyCardSkeleton() {
   return (
-    <div className="bg-surface rounded-xl border border-border shadow-card p-5 h-full">
+    <div className="bg-surface rounded-lg border border-border shadow-card p-4 h-full">
       <div className="flex items-start gap-3">
         <Skeleton className="w-12 h-12 rounded-xl shrink-0" />
         <div className="flex-1 min-w-0 flex flex-col gap-2">

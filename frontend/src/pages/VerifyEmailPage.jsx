@@ -27,7 +27,7 @@ export default function VerifyEmailPage() {
             <p className="text-body text-text-secondary mb-6">Your account is now active.</p>
             <Link
               to="/login"
-              className="inline-block bg-accent hover:bg-accent-hover text-white font-medium py-2.5 px-8 rounded-full transition-all duration-150"
+              className="inline-block bg-accent hover:bg-accent-hover text-base font-medium py-2.5 px-8 rounded-md transition-all duration-150"
             >
               Sign in
             </Link>

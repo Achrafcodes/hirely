@@ -182,17 +182,17 @@ export default function JobFilters({ onSearch, loading, initialValues = {} }) {
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex flex-wrap gap-2">
             {activeFilters.map((f) => (
-              <span key={f.key} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20">
+              <span key={f.key} className="flex items-center gap-1.5 px-2 py-1 rounded-sm font-mono text-caption uppercase bg-accent-dim text-accent-text border border-accent/30">
                 {f.label}
                 <button type="button" onClick={f.clear} className="hover:text-accent-hover leading-none">×</button>
               </span>
             ))}
           </div>
           <div className="flex gap-2 ml-auto">
-            <button type="button" onClick={handleReset} className="px-4 py-1.5 text-sm text-text-secondary hover:text-text-primary rounded-full border border-border hover:border-text-disabled transition-colors">
+            <button type="button" onClick={handleReset} className="px-4 py-1.5 text-sm text-text-secondary hover:border-accent hover:text-accent rounded-md border border-border transition-colors">
               Reset
             </button>
-            <button type="submit" disabled={loading} className="px-4 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40">
+            <button type="submit" disabled={loading} className="px-4 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-base rounded-md transition-all duration-150 active:scale-[0.97] disabled:opacity-40">
               Search
             </button>
           </div>

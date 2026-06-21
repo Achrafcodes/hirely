@@ -73,9 +73,9 @@ export default function RegisterPage() {
                 key={r}
                 type="button"
                 onClick={() => setRole(r)}
-                className={`flex-1 py-1.5 rounded-full text-sm font-medium transition-all duration-150 capitalize ${
+                className={`flex-1 py-1.5 rounded-md text-sm font-medium transition-all duration-150 capitalize ${
                   role === r
-                    ? 'bg-accent text-white shadow-sm'
+                    ? 'bg-accent text-base shadow-sm'
                     : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
@@ -103,7 +103,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-1 bg-accent hover:bg-accent-hover text-white font-medium py-2.5 rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full mt-1 bg-accent hover:bg-accent-hover text-base font-medium py-2.5 rounded-md transition-all duration-150 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account…' : 'Create account'}
             </button>

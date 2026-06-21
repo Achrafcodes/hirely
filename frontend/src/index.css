@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,23 +25,22 @@
 
 @layer components {
   .featured-card {
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .featured-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.55);
-    border-color: #3f3f46;
+    border-color: #E8A030;
+    box-shadow: 0 0 0 1px rgba(232,160,48,0.15);
   }
 
   .job-card-border { position: relative; overflow: hidden; }
   .job-card-border::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 0; background-color: #6366F1;
-    border-radius: 8px 0 0 8px; transition: width 0.15s ease;
+    width: 0; background-color: #E8A030;
+    border-radius: 0; transition: width 0.15s ease;
   }
   .job-card-border:hover::before { width: 3px; }
 
-  .hero-gradient { background: var(--hero-gradient, radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.18) 0%, transparent 70%)); }
+  .hero-gradient { background: none; }
 
   .glow-orb {
     position: absolute; border-radius: 50%;
@@ -59,7 +60,7 @@
   .shine::after {
     content: ''; position: absolute; top: 0; left: -100%;
     width: 60%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.1), transparent);
     transform: skewX(-20deg); transition: left 0.5s ease;
   }
   .shine:hover::after { left: 150%; }
@@ -100,88 +101,72 @@
 
 /* ══════════════════════════════════════════
    LIGHT MODE OVERRIDES
-   These override the compiled Tailwind classes
-   and hot-reload instantly via Vite HMR
 ══════════════════════════════════════════ */
 
-/* Transition for smooth theme switch */
 html.light body,
 html.light #root {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Backgrounds */
-html.light body                   { background-color: #FAFAFC !important; color: #18181B !important; }
-html.light .bg-base               { background-color: #FAFAFC !important; }
-html.light .bg-base\/80           { background-color: rgba(250,250,252,0.8) !important; }
+html.light body                   { background-color: #F8F7F5 !important; color: #18181B !important; }
+html.light .bg-base               { background-color: #F8F7F5 !important; }
+html.light .bg-base\/80           { background-color: rgba(248,247,245,0.8) !important; }
 html.light .bg-surface            { background-color: #FFFFFF !important; }
 html.light .bg-surface\/80        { background-color: rgba(255,255,255,0.8) !important; }
-html.light .bg-surface-raised     { background-color: #F1F1F5 !important; }
-html.light .bg-accent\/10         { background-color: rgba(99,102,241,0.10) !important; }
-html.light .bg-accent\/15         { background-color: rgba(99,102,241,0.15) !important; }
-html.light .bg-accent\/30         { background-color: rgba(99,102,241,0.30) !important; }
+html.light .bg-surface-raised     { background-color: #F0EEE9 !important; }
+html.light .bg-accent\/10         { background-color: rgba(232,160,48,0.10) !important; }
+html.light .bg-accent\/15         { background-color: rgba(232,160,48,0.15) !important; }
+html.light .bg-accent\/30         { background-color: rgba(232,160,48,0.30) !important; }
+html.light .bg-accent-dim         { background-color: #FEF3C7 !important; }
 html.light .bg-danger\/10         { background-color: rgba(185,28,28,0.10) !important; }
 html.light .bg-success\/10        { background-color: rgba(22,163,74,0.10) !important; }
 html.light .bg-success\/20        { background-color: rgba(22,163,74,0.20) !important; }
 html.light .bg-warning\/10        { background-color: rgba(180,83,9,0.10) !important; }
 html.light .bg-text-disabled\/10  { background-color: rgba(82,82,91,0.10) !important; }
 
-/* Text */
 html.light .text-text-primary     { color: #18181B !important; }
 html.light .text-text-secondary   { color: #52525B !important; }
-html.light .text-text-disabled    { color: #6F6F80 !important; }
+html.light .text-text-disabled    { color: #71717A !important; }
+html.light .text-accent           { color: #C47A10 !important; }
+html.light .text-accent-text      { color: #C47A10 !important; }
 
-/* Borders */
-html.light .border-border         { border-color: #E2E2E8 !important; }
-html.light .border-border\/60     { border-color: rgba(226,226,232,0.6) !important; }
-html.light .border-border\/20     { border-color: rgba(226,226,232,0.2) !important; }
+html.light .border-border         { border-color: #E4E1D9 !important; }
+html.light .border-border\/60     { border-color: rgba(228,225,217,0.6) !important; }
+html.light .border-border\/20     { border-color: rgba(228,225,217,0.2) !important; }
+html.light .border-accent         { border-color: #C47A10 !important; }
 
-/* Navbar / header backdrop */
-html.light header                 { background-color: rgba(250,250,252,0.85) !important; border-color: #E2E2E8 !important; }
+html.light header                 { background-color: rgba(248,247,245,0.85) !important; border-color: #E4E1D9 !important; }
 
-/* Featured card hover in light */
 html.light .featured-card:hover {
-  box-shadow: 0 12px 40px rgba(0,0,0,0.10) !important;
-  border-color: #A1A1AA !important;
+  border-color: #C47A10 !important;
+  box-shadow: 0 0 0 1px rgba(196,122,16,0.15) !important;
 }
 
-/* Ring offset */
-html.light .ring-offset-base      { --tw-ring-offset-color: #FAFAFC; }
+html.light .ring-offset-base      { --tw-ring-offset-color: #F8F7F5; }
 html.light .ring-offset-surface   { --tw-ring-offset-color: #FFFFFF; }
 
-/* Hero gradient in light */
-html.light .hero-gradient {
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.08) 0%, transparent 70%) !important;
-}
+html.light .hero-gradient { background: none !important; }
 
-/* Glow orbs lighter in light mode */
-html.light .glow-orb { opacity: 0.4 !important; }
+html.light .glow-orb { opacity: 0.3 !important; }
 
-/* Footer in light */
-html.light footer { background-color: #FAFAFC !important; border-color: #E2E2E8 !important; }
+html.light footer { background-color: #F8F7F5 !important; border-color: #E4E1D9 !important; }
 
-/* Mobile drawer in light */
-html.light .bg-surface { background-color: #FFFFFF !important; }
-
-/* Hover backgrounds in light mode */
-html.light .hover\:bg-surface-raised:hover { background-color: #F1F1F5 !important; }
+html.light .hover\:bg-surface-raised:hover { background-color: #F0EEE9 !important; }
 html.light .hover\:bg-surface:hover         { background-color: #FFFFFF !important; }
-html.light .hover\:bg-accent-hover:hover    { background-color: #4F46E5 !important; }
+html.light .hover\:bg-accent-hover:hover    { background-color: #D4911F !important; }
 html.light .hover\:bg-danger\/10:hover      { background-color: rgba(185,28,28,0.10) !important; }
 html.light .hover\:bg-danger\/20:hover      { background-color: rgba(185,28,28,0.20) !important; }
 
-/* Hover text colors in light mode */
 html.light .hover\:text-text-primary:hover   { color: #18181B !important; }
 html.light .hover\:text-text-secondary:hover { color: #52525B !important; }
-html.light .hover\:text-accent:hover         { color: #6366F1 !important; }
-html.light .hover\:text-accent-hover:hover   { color: #4F46E5 !important; }
+html.light .hover\:text-accent:hover         { color: #C47A10 !important; }
+html.light .hover\:text-accent-hover:hover   { color: #B8700F !important; }
 
-/* Form inputs in light mode */
 html.light input,
 html.light select,
 html.light textarea {
   background-color: #FFFFFF !important;
-  border-color: #E2E2E8 !important;
+  border-color: #E4E1D9 !important;
   color: #18181B !important;
 }
 html.light input::placeholder,

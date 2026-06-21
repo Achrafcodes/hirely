@@ -101,7 +101,7 @@ export default function JobsPage() {
           <button
             disabled={page === 1}
             onClick={() => handlePage(page - 1)}
-            className="px-4 py-2 text-sm font-medium rounded-full border border-border text-text-secondary hover:text-text-primary hover:border-accent/50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium rounded-md border border-border text-text-secondary hover:border-accent hover:text-accent transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           >
             ← Previous
           </button>
@@ -111,7 +111,7 @@ export default function JobsPage() {
           <button
             disabled={page === pages}
             onClick={() => handlePage(page + 1)}
-            className="px-4 py-2 text-sm font-medium rounded-full border border-border text-text-secondary hover:text-text-primary hover:border-accent/50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium rounded-md border border-border text-text-secondary hover:border-accent hover:text-accent transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Next →
           </button>

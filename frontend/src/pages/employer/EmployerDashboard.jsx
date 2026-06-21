@@ -27,7 +27,7 @@ const UsersIcon = () => (
 function StatCard({ label, value }) {
   return (
     <div className="bg-surface border border-border rounded-xl p-4">
-      <p className="text-2xl font-bold text-text-primary">{value}</p>
+      <p className="text-2xl font-medium text-text-primary">{value}</p>
       <p className="text-caption text-text-secondary mt-0.5">{label}</p>
     </div>
   );
@@ -150,7 +150,7 @@ export default function EmployerDashboard() {
         </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null); }}
-          className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]"
+          className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-base text-sm font-medium px-5 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
         >
           + Post a job
         </button>
@@ -187,7 +187,7 @@ export default function EmployerDashboard() {
           <p className="text-sm text-text-secondary mb-6">Create your first listing to start receiving applications</p>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]"
+            className="bg-accent hover:bg-accent-hover text-base text-sm font-medium px-5 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
           >
             Post your first job
           </button>
@@ -220,19 +220,19 @@ export default function EmployerDashboard() {
                   </Link>
                   <button
                     onClick={() => { setEditing(job); setShowForm(false); }}
-                    className="text-sm px-3 py-1.5 rounded-full bg-surface-raised border border-border text-text-secondary hover:text-text-primary hover:border-accent/50 transition-all"
+                    className="text-sm px-3 py-1.5 rounded-md bg-surface-raised border border-border text-text-secondary hover:border-accent hover:text-accent transition-all"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleToggleStatus(job)}
-                    className="text-sm px-3 py-1.5 rounded-full bg-surface-raised border border-border text-text-secondary hover:text-text-primary hover:border-accent/50 transition-all"
+                    className="text-sm px-3 py-1.5 rounded-md bg-surface-raised border border-border text-text-secondary hover:border-accent hover:text-accent transition-all"
                   >
                     {job.status === 'active' ? 'Close' : 'Reopen'}
                   </button>
                   <button
                     onClick={() => handleDelete(job._id)}
-                    className="text-sm px-3 py-1.5 rounded-full bg-danger/10 border border-danger/30 text-danger hover:bg-danger/20 transition-all"
+                    className="text-sm px-3 py-1.5 rounded-md bg-danger/10 border border-danger/30 text-danger hover:bg-danger/20 transition-all"
                   >
                     Delete
                   </button>

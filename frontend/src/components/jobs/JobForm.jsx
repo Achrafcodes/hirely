@@ -85,7 +85,7 @@ export default function JobForm({ initial = {}, onSubmit, onCancel, loading }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-accent hover:bg-accent-hover text-white font-medium py-2.5 rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
+          className="flex-1 bg-accent hover:bg-accent-hover text-base font-medium py-2.5 rounded-md transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
         >
           {loading ? 'Saving…' : 'Save job'}
         </button>
