@@ -82,6 +82,36 @@ exports.getJob = async (req, res) => {
   res.json({ job });
 };
 
+exports.getRelatedJobs = async (req, res) => {
+  const job = await Job.findById(req.params.id).select('skills employer');
+  if (!job) return res.status(404).json({ message: 'Job not found' });
+
+  const orConditions = [];
+  if (job.skills?.length) orConditions.push({ skills: { $in: job.skills } });
+  orConditions.push({ employer: job.employer });
+
+  const candidates = await Job.find({
+    _id: { $ne: job._id },
+    status: 'active',
+    $or: orConditions,
+  })
+    .limit(20)
+    .populate('employer', 'name companyName location');
+
+  const jobSkills = new Set((job.skills || []).map((s) => s.toLowerCase()));
+  const scored = candidates
+    .map((j) => {
+      const overlap = (j.skills || []).filter((s) => jobSkills.has(s.toLowerCase())).length;
+      const sameEmployer = String(j.employer?._id) === String(job.employer) ? 1 : 0;
+      return { job: j, score: overlap * 2 + sameEmployer };
+    })
+    .sort((a, b) => b.score - a.score || new Date(b.job.createdAt) - new Date(a.job.createdAt))
+    .slice(0, 4)
+    .map((x) => x.job);
+
+  res.json({ jobs: scored });
+};
+
 exports.updateJob = async (req, res) => {
   const job = await Job.findById(req.params.id);
   if (!job) return res.status(404).json({ message: 'Job not found' });

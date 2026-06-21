@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { getJob, applyToJob } from '../api';
+import { getJob, applyToJob, getRelatedJobs } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
+import JobCard from '../components/jobs/JobCard';
 import useSEO from '../hooks/useSEO';
 
 function AuthModal({ onClose, onSuccess }) {
@@ -123,12 +124,17 @@ export default function JobDetailPage() {
   const [error, setError] = useState('');
   const [loadError, setLoadError] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [related, setRelated] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     getJob(id)
       .then((r) => setJob(r.data.job))
       .catch(() => setLoadError(true))
       .finally(() => setLoading(false));
+    getRelatedJobs(id)
+      .then((r) => setRelated(r.data.jobs))
+      .catch(() => setRelated([]));
   }, [id]);
 
   const seoCompany = job?.employer?.companyName || job?.employer?.name;
@@ -362,6 +368,18 @@ export default function JobDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Related jobs */}
+      {related.length > 0 && (
+        <div className="mt-10">
+          <h2 className="text-h3 text-text-primary mb-4">Similar roles</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {related.map((j) => (
+              <JobCard key={j._id} job={j} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {showAuthModal && (
         <AuthModal

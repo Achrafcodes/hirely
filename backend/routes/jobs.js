@@ -12,6 +12,7 @@ const {
   updateJob,
   deleteJob,
   getApplicants,
+  getRelatedJobs,
   getStats,
   getSavedJobs,
   saveJob,
@@ -31,6 +32,7 @@ router.get('/',                                                                 
 router.get('/mine',   verifyToken, requireRole('employer'),                           asyncHandler(getMyJobs));
 router.put('/:id/save',    verifyToken, requireRole('candidate'),                     asyncHandler(saveJob));
 router.delete('/:id/save', verifyToken, requireRole('candidate'),                     asyncHandler(unsaveJob));
+router.get('/:id/related',                                                            asyncHandler(getRelatedJobs));
 router.get('/:id',                                                                    asyncHandler(getJob));
 router.post('/',      verifyToken, requireRole('employer'), jobLimits,               asyncHandler(createJob));
 router.put('/:id',    verifyToken, requireRole('employer'), jobLimits,               asyncHandler(updateJob));
