@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout';
 import LandingPage from './pages/LandingPage';
 import JobsPage from './pages/JobsPage';
 import JobDetailPage from './pages/JobDetailPage';
+import CompaniesPage from './pages/CompaniesPage';
 import CompanyPage from './pages/CompanyPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -38,6 +39,7 @@ export default function App() {
         <Route index element={<LandingPage />} />
         <Route path="jobs" element={<JobsPage />} />
         <Route path="jobs/:id" element={<JobDetailPage />} />
+        <Route path="companies" element={<CompaniesPage />} />
         <Route path="companies/:id" element={<CompanyPage />} />
 
         <Route path="login" element={<GuestRoute><LoginPage /></GuestRoute>} />

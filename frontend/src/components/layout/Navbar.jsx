@@ -78,6 +78,7 @@ export default function Navbar() {
             {/* Desktop center nav */}
             <nav className="hidden md:flex items-center gap-0.5">
               <NavLink to="/jobs" className={navLinkClass}>Find Jobs</NavLink>
+              <NavLink to="/companies" className={navLinkClass}>Companies</NavLink>
               <Link to="/register" className="px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-all duration-150">
                 Employers
               </Link>
@@ -146,6 +147,10 @@ export default function Navbar() {
           <NavLink to="/jobs" className={({ isActive }) =>
             `px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-accent/10 text-accent' : 'text-text-primary hover:bg-surface-raised'}`}>
             Find Jobs
+          </NavLink>
+          <NavLink to="/companies" className={({ isActive }) =>
+            `px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-accent/10 text-accent' : 'text-text-primary hover:bg-surface-raised'}`}>
+            Companies
           </NavLink>
           <Link to="/register" className="px-4 py-3 rounded-xl text-sm font-medium text-text-primary hover:bg-surface-raised transition-all">
             Employers

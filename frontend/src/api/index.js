@@ -27,6 +27,7 @@ export const deleteJob = (id) => api.delete(`/jobs/${id}`);
 export const getApplicants = (jobId, params) => api.get(`/jobs/${jobId}/applicants`, { params });
 
 // Companies
+export const getCompanies = () => api.get('/companies');
 export const getCompany = (id) => api.get(`/companies/${id}`);
 
 // Saved jobs
