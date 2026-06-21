@@ -69,24 +69,27 @@ function useReveal() {
 function Counter({ target, suffix = '', duration = 1600 }) {
   const [value, setValue] = useState(0);
   const ref = useRef(null);
-  const started = useRef(false);
+
   useEffect(() => {
+    if (!target) return;
     const el = ref.current;
-    if (!el) return;
+    const animate = () => {
+      const start = performance.now();
+      const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        setValue(Math.round((1 - Math.pow(1 - progress, 3)) * target));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    if (!el) { animate(); return; }
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      animate();
+      return;
+    }
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const tick = (now) => {
-            const progress = Math.min((now - start) / duration, 1);
-            setValue(Math.round((1 - Math.pow(1 - progress, 3)) * target));
-            if (progress < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-          obs.disconnect();
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) { animate(); obs.disconnect(); } },
       { threshold: 0.3 }
     );
     obs.observe(el);
