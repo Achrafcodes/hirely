@@ -86,6 +86,11 @@ const DollarIcon = () => (
     <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
   </svg>
 );
+const HeartIcon = ({ filled }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
 
 function CompanyAvatar({ name, size = 'lg' }) {
   const sz = size === 'lg' ? 'w-14 h-14 text-xl' : 'w-10 h-10 text-sm';
@@ -107,7 +112,7 @@ function formatSalary(min, max) {
 export default function JobDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isJobSaved, toggleSaveJob } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
@@ -214,6 +219,28 @@ export default function JobDetailPage() {
             </div>
             <h1 className="text-h1 text-text-primary">{job.title}</h1>
           </div>
+          {user?.role === 'candidate' && (
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const nowSaved = await toggleSaveJob(job._id);
+                  toast.success(nowSaved ? 'Job saved' : 'Removed from saved');
+                } catch {
+                  toast.error('Could not update saved jobs');
+                }
+              }}
+              aria-label={isJobSaved(job._id) ? 'Remove from saved jobs' : 'Save job'}
+              aria-pressed={isJobSaved(job._id)}
+              className={`shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border transition-all duration-150 active:scale-90 ${
+                isJobSaved(job._id)
+                  ? 'text-accent border-accent/40 bg-accent/10'
+                  : 'text-text-disabled border-border hover:text-text-secondary hover:bg-surface-raised'
+              }`}
+            >
+              <HeartIcon filled={isJobSaved(job._id)} />
+            </button>
+          )}
         </div>
 
         {/* Meta row */}

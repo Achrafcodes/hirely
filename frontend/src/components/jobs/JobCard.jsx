@@ -1,5 +1,13 @@
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import Badge from '../ui/Badge';
+import { useAuth } from '../../context/AuthContext';
+
+const HeartIcon = ({ filled }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
 
 const PinIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -41,8 +49,23 @@ function timeAgo(date) {
 }
 
 export default function JobCard({ job }) {
+  const { user, isJobSaved, toggleSaveJob } = useAuth();
   const companyName = job.employer?.companyName || job.employer?.name;
   const salary = formatSalary(job.salaryMin, job.salaryMax);
+  const saved = isJobSaved(job._id);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const nowSaved = await toggleSaveJob(job._id);
+      toast.success(nowSaved ? 'Job saved' : 'Removed from saved');
+    } catch {
+      toast.error('Could not update saved jobs');
+    }
+  };
+
+  const canSave = user?.role === 'candidate';
 
   return (
     <Link to={`/jobs/${job._id}`} className="block group">
@@ -56,7 +79,22 @@ export default function JobCard({ job }) {
             </h3>
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
-            <Badge type={job.type}>{job.type.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</Badge>
+            <div className="flex items-center gap-1.5">
+              {canSave && (
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  aria-label={saved ? 'Remove from saved jobs' : 'Save job'}
+                  aria-pressed={saved}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-150 active:scale-90 ${
+                    saved ? 'text-accent' : 'text-text-disabled hover:text-text-secondary hover:bg-surface-raised'
+                  }`}
+                >
+                  <HeartIcon filled={saved} />
+                </button>
+              )}
+              <Badge type={job.type}>{job.type.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</Badge>
+            </div>
             <span className="text-caption text-text-disabled">{timeAgo(job.createdAt)}</span>
           </div>
         </div>

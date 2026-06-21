@@ -148,3 +148,26 @@ exports.getApplicants = async (req, res) => {
 
   res.json({ applications, total, page: pageNum, pages: Math.ceil(total / pageSize) });
 };
+
+exports.getSavedJobs = async (req, res) => {
+  const user = await User.findById(req.user._id).populate({
+    path: 'savedJobs',
+    populate: { path: 'employer', select: 'name companyName location' },
+  });
+  // Filter out any jobs that were deleted after being saved
+  const jobs = (user.savedJobs || []).filter(Boolean);
+  res.json({ jobs });
+};
+
+exports.saveJob = async (req, res) => {
+  const job = await Job.findById(req.params.id);
+  if (!job) return res.status(404).json({ message: 'Job not found' });
+
+  await User.findByIdAndUpdate(req.user._id, { $addToSet: { savedJobs: job._id } });
+  res.json({ message: 'Job saved', jobId: job._id });
+};
+
+exports.unsaveJob = async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, { $pull: { savedJobs: req.params.id } });
+  res.json({ message: 'Job removed from saved', jobId: req.params.id });
+};

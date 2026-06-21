@@ -41,8 +41,35 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+  const toggleSaveJob = async (jobId) => {
+    const isSaved = user?.savedJobs?.some((id) => String(id) === String(jobId));
+    // Optimistic update
+    setUser((u) => ({
+      ...u,
+      savedJobs: isSaved
+        ? (u.savedJobs || []).filter((id) => String(id) !== String(jobId))
+        : [...(u.savedJobs || []), jobId],
+    }));
+    try {
+      if (isSaved) await api.unsaveJob(jobId);
+      else await api.saveJob(jobId);
+    } catch (err) {
+      // Revert on failure
+      setUser((u) => ({
+        ...u,
+        savedJobs: isSaved
+          ? [...(u.savedJobs || []), jobId]
+          : (u.savedJobs || []).filter((id) => String(id) !== String(jobId)),
+      }));
+      throw err;
+    }
+    return !isSaved;
+  };
+
+  const isJobSaved = (jobId) => user?.savedJobs?.some((id) => String(id) === String(jobId)) ?? false;
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, toggleSaveJob, isJobSaved }}>
       {children}
     </AuthContext.Provider>
   );

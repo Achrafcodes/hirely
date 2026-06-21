@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     location: String,
     bio: String,
     resumeUrl: String,
+    savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
 
     // employer fields
     companyName: String,

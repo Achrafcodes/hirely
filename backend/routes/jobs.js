@@ -13,6 +13,9 @@ const {
   deleteJob,
   getApplicants,
   getStats,
+  getSavedJobs,
+  saveJob,
+  unsaveJob,
 } = require('../controllers/jobController');
 const { applyToJob } = require('../controllers/applicationController');
 
@@ -23,8 +26,11 @@ const jobLimits = validate({
 });
 
 router.get('/stats',                                                                  asyncHandler(getStats));
+router.get('/saved',  verifyToken, requireRole('candidate'),                          asyncHandler(getSavedJobs));
 router.get('/',                                                                       asyncHandler(getJobs));
 router.get('/mine',   verifyToken, requireRole('employer'),                           asyncHandler(getMyJobs));
+router.put('/:id/save',    verifyToken, requireRole('candidate'),                     asyncHandler(saveJob));
+router.delete('/:id/save', verifyToken, requireRole('candidate'),                     asyncHandler(unsaveJob));
 router.get('/:id',                                                                    asyncHandler(getJob));
 router.post('/',      verifyToken, requireRole('employer'), jobLimits,               asyncHandler(createJob));
 router.put('/:id',    verifyToken, requireRole('employer'), jobLimits,               asyncHandler(updateJob));
