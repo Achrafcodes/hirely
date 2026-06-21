@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
 const DEFAULTS = {
-  title: 'Hirely — Find Work That Matters',
+  title: 'Hustl — Find Work That Matters',
   description:
-    'Hirely connects ambitious candidates with the startups shaping the next decade. Browse curated tech jobs, apply in minutes, and track every application in one place.',
+    'Hustl connects ambitious candidates with the startups shaping the next decade. Browse curated tech jobs, apply in minutes, and track every application in one place.',
 };
 
 function setMeta(selector, attr, value) {
@@ -23,7 +23,7 @@ function setMeta(selector, attr, value) {
  */
 export default function useSEO({ title, description } = {}) {
   useEffect(() => {
-    const fullTitle = title ? `${title} — Hirely` : DEFAULTS.title;
+    const fullTitle = title ? `${title} — Hustl` : DEFAULTS.title;
     const desc = description || DEFAULTS.description;
 
     document.title = fullTitle;

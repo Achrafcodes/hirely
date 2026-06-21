@@ -14,7 +14,7 @@ const BoltIcon = () => (
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  useSEO({ title: 'Create Account', description: 'Join Hirely to apply for tech jobs or post openings and find your next great hire.' });
+  useSEO({ title: 'Create Account', description: 'Join Hustl to apply for tech jobs or post openings and find your next great hire.' });
   const [role, setRole] = useState('candidate');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [extra, setExtra] = useState({ companyName: '', skills: '', location: '' });
@@ -55,7 +55,7 @@ export default function RegisterPage() {
             <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-white">
               <BoltIcon />
             </div>
-            <span className="text-base font-semibold text-text-primary">Hirely</span>
+            <span className="text-base font-semibold text-text-primary">Hustl</span>
           </Link>
         </div>
 

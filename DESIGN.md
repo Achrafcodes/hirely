@@ -1,4 +1,4 @@
-# Design System — Hirely Job Board
+# Design System — Hustl Job Board
 
 Dark-mode first. "Bold modern startup" — Linear/Notion register: confident, clean, restrained.
 No animations in v1. Every visual decision below is the single source of truth.

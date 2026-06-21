@@ -14,7 +14,7 @@ const BoltIcon = () => (
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  useSEO({ title: 'Sign In', description: 'Sign in to your Hirely account to apply for jobs and track your applications.' });
+  useSEO({ title: 'Sign In', description: 'Sign in to your Hustl account to apply for jobs and track your applications.' });
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function LoginPage() {
             <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-white">
               <BoltIcon />
             </div>
-            <span className="text-base font-semibold text-text-primary">Hirely</span>
+            <span className="text-base font-semibold text-text-primary">Hustl</span>
           </Link>
         </div>
 

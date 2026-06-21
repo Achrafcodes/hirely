@@ -1,4 +1,4 @@
-# Hirely — Job Board
+# Hustl — Job Board
 
 A full-stack job board where candidates can browse and apply for jobs, and employers can post listings and manage applicants.
 

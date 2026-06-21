@@ -30,7 +30,7 @@ export default function Footer() {
               <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-white group-hover:scale-105 transition-transform duration-200">
                 <BoltIcon />
               </div>
-              <span className="text-sm font-semibold text-text-primary tracking-tight">Hirely</span>
+              <span className="text-sm font-semibold text-text-primary tracking-tight">Hustl</span>
             </Link>
             <p className="text-caption text-text-secondary leading-relaxed max-w-[200px]">
               Connecting ambitious people with the startups shaping the next decade.
@@ -66,7 +66,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="py-5 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-caption text-text-disabled">© {new Date().getFullYear()} Hirely. All rights reserved.</p>
+          <p className="text-caption text-text-disabled">© {new Date().getFullYear()} Hustl. All rights reserved.</p>
           <div className="flex items-center gap-1 text-caption text-text-disabled">
             <span>Built with</span>
             <span className="text-accent">♥</span>

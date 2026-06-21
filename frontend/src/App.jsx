@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
+import LoadingScreen from './components/layout/LoadingScreen';
 import LandingPage from './pages/LandingPage';
 import JobsPage from './pages/JobsPage';
 import JobDetailPage from './pages/JobDetailPage';
@@ -33,6 +34,9 @@ function GuestRoute({ children }) {
 }
 
 export default function App() {
+  const { loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+
   return (
     <Routes>
       <Route element={<Layout />}>

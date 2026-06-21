@@ -18,7 +18,7 @@ function CompanyAvatar({ name }) {
 }
 
 export default function CompaniesPage() {
-  useSEO({ title: 'Companies', description: 'Browse companies hiring on Hirely and explore their open roles.' });
+  useSEO({ title: 'Companies', description: 'Browse companies hiring on Hustl and explore their open roles.' });
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

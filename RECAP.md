@@ -1,4 +1,4 @@
-# Hirely Job Board — Full Session Recap
+# Hustl Job Board — Full Session Recap
 
 ---
 
@@ -46,7 +46,7 @@
 ## Performance & SEO (Lighthouse Audit)
 
 - **`vite.config.js`** — added `manualChunks` (function form, required by Vite 8/rolldown) to split vendor (React/router: 231KB) and axios (44KB) into separate cached chunks
-- **`index.html`** — fixed title ("frontend" → "Hirely — Find Work That Matters"), added meta description, Open Graph tags, moved Google Fonts from CSS `@import` (render-blocking) to `<link rel="preconnect">` + `<link rel="stylesheet">` (parallel, non-blocking)
+- **`index.html`** — fixed title ("frontend" → "Hustl — Find Work That Matters"), added meta description, Open Graph tags, moved Google Fonts from CSS `@import` (render-blocking) to `<link rel="preconnect">` + `<link rel="stylesheet">` (parallel, non-blocking)
 - **`public/robots.txt`** — created with `Allow: /`
 - **Contrast fix** — `text-disabled` was `#52525B` on `#0A0A0B` = 2.56:1 (WCAG AA requires 4.5:1); bumped to `#838391` (5.28:1) in dark mode, `#6F6F80` (4.72:1) in light mode
 

@@ -37,7 +37,7 @@ export default function CompanyPage() {
   const companyName = company?.companyName || company?.name;
   useSEO(
     company
-      ? { title: companyName, description: `${companyName} is hiring on Hirely. Browse ${jobs.length} open role${jobs.length !== 1 ? 's' : ''}${company.location ? ` in ${company.location}` : ''}.` }
+      ? { title: companyName, description: `${companyName} is hiring on Hustl. Browse ${jobs.length} open role${jobs.length !== 1 ? 's' : ''}${company.location ? ` in ${company.location}` : ''}.` }
       : {}
   );
 

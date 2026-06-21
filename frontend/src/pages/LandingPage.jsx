@@ -240,7 +240,7 @@ export default function LandingPage() {
 
             <p className="animate-fade-in-up text-sm sm:text-body text-text-secondary max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed"
               style={{ animationDelay: '200ms' }}>
-              Hirely connects ambitious people with the startups shaping the next decade.
+              Hustl connects ambitious people with the startups shaping the next decade.
               No noise, no spam — just the right opportunities.
             </p>
 

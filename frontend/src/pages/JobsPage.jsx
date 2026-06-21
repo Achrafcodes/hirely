@@ -24,7 +24,7 @@ export default function JobsPage() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  useSEO({ title: 'Browse Jobs', description: 'Search and filter open tech roles from startups hiring now. Find your next job by title, location, skills, and salary on Hirely.' });
+  useSEO({ title: 'Browse Jobs', description: 'Search and filter open tech roles from startups hiring now. Find your next job by title, location, skills, and salary on Hustl.' });
 
   const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
   const filters = getFiltersFromParams(searchParams);

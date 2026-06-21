@@ -72,7 +72,7 @@ export default function Navbar() {
               <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-white transition-transform duration-200 group-hover:scale-105">
                 <BoltIcon />
               </div>
-              <span className="text-sm font-semibold text-text-primary tracking-tight">Hirely</span>
+              <span className="text-sm font-semibold text-text-primary tracking-tight">Hustl</span>
             </Link>
 
             {/* Desktop center nav */}
@@ -192,7 +192,7 @@ export default function Navbar() {
 
         {/* Bottom info */}
         <div className="mt-auto p-4 border-t border-border">
-          <p className="text-caption text-text-disabled text-center">© {new Date().getFullYear()} Hirely, Inc.</p>
+          <p className="text-caption text-text-disabled text-center">© {new Date().getFullYear()} Hustl, Inc.</p>
         </div>
       </div>
     </>

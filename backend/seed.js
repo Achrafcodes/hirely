@@ -22,7 +22,7 @@ async function seed() {
   const employers = await User.insertMany([
     {
       name: 'Achraf Elssoussi',
-      email: 'achraf@hirely.io',
+      email: 'achraf@hustl.io',
       password: await hash('Password123!'),
       role: 'employer',
       companyName: 'Achrafcodes Studio',
@@ -234,7 +234,7 @@ async function seed() {
 
   console.log('Created 9 jobs');
   console.log('\nSeed complete ✓');
-  console.log('\nEmployer login: achraf@hirely.io / Password123!');
+  console.log('\nEmployer login: achraf@hustl.io / Password123!');
   console.log('Candidate login: mehdi.alaoui@gmail.com / Password123!');
   await mongoose.disconnect();
 }
