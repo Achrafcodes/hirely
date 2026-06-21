@@ -70,7 +70,15 @@ export default function Footer() {
           <div className="flex items-center gap-1 text-caption text-text-disabled">
             <span>Built with</span>
             <span className="text-accent">♥</span>
-            <span>for job seekers everywhere</span>
+            <span>for job seekers everywhere by</span>
+            <a
+              href="https://github.com/Achrafcodes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:text-accent-hover transition-colors font-medium"
+            >
+              achrafcodes
+            </a>
           </div>
         </div>
 
