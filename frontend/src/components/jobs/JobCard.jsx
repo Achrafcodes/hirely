@@ -53,6 +53,7 @@ export default function JobCard({ job }) {
   const companyName = job.employer?.companyName || job.employer?.name;
   const salary = formatSalary(job.salaryMin, job.salaryMax);
   const saved = isJobSaved(job._id);
+  const isNew = (Date.now() - new Date(job.createdAt)) < 7 * 86400000;
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -74,9 +75,16 @@ export default function JobCard({ job }) {
           <CompanyAvatar name={companyName} />
           <div className="flex-1 min-w-0">
             <p className="text-caption text-text-secondary mb-0.5 truncate">{companyName}</p>
-            <h3 className="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-150 leading-snug">
-              {job.title}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-150 leading-snug">
+                {job.title}
+              </h3>
+              {isNew && (
+                <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/20">
+                  New
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
             <div className="flex items-center gap-1.5">

@@ -77,7 +77,11 @@ exports.getJobs = async (req, res) => {
 };
 
 exports.getJob = async (req, res) => {
-  const job = await Job.findById(req.params.id).populate('employer', 'name companyName website location');
+  const job = await Job.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { views: 1 } },
+    { new: true }
+  ).populate('employer', 'name companyName website location');
   if (!job) return res.status(404).json({ message: 'Job not found' });
   res.json({ job });
 };
@@ -147,8 +151,17 @@ exports.deleteJob = async (req, res) => {
 };
 
 exports.getMyJobs = async (req, res) => {
-  const jobs = await Job.find({ employer: req.user._id }).sort({ createdAt: -1 });
-  res.json({ jobs });
+  const Application = require('../models/Application');
+  const jobs = await Job.find({ employer: req.user._id }).sort({ createdAt: -1 }).lean();
+
+  const counts = await Application.aggregate([
+    { $match: { job: { $in: jobs.map((j) => j._id) } } },
+    { $group: { _id: '$job', count: { $sum: 1 } } },
+  ]);
+  const countMap = Object.fromEntries(counts.map((c) => [String(c._id), c.count]));
+
+  const withCounts = jobs.map((j) => ({ ...j, applicantCount: countMap[String(j._id)] || 0 }));
+  res.json({ jobs: withCounts });
 };
 
 exports.getApplicants = async (req, res) => {

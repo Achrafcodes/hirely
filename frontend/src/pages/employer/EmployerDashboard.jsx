@@ -12,6 +12,25 @@ const PinIcon = () => (
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
   </svg>
 );
+const EyeIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+  </svg>
+);
+const UsersIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+function StatCard({ label, value }) {
+  return (
+    <div className="bg-surface border border-border rounded-xl p-4">
+      <p className="text-2xl font-bold text-text-primary">{value}</p>
+      <p className="text-caption text-text-secondary mt-0.5">{label}</p>
+    </div>
+  );
+}
 
 export default function EmployerDashboard() {
   useSEO({ title: 'Employer Dashboard' });
@@ -135,6 +154,16 @@ export default function EmployerDashboard() {
         </button>
       </div>
 
+      {/* Summary analytics */}
+      {jobs.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <StatCard label="Active jobs" value={jobs.filter((j) => j.status === 'active').length} />
+          <StatCard label="Total views" value={jobs.reduce((s, j) => s + (j.views || 0), 0).toLocaleString()} />
+          <StatCard label="Total applicants" value={jobs.reduce((s, j) => s + (j.applicantCount || 0), 0)} />
+          <StatCard label="Postings" value={jobs.length} />
+        </div>
+      )}
+
       {/* Job form — key forces remount when switching between jobs */}
       {(showForm || editing) && (
         <div className="bg-surface rounded-xl border border-border p-6 mb-6">
@@ -172,11 +201,13 @@ export default function EmployerDashboard() {
                     <Badge type={job.type}>{job.type}</Badge>
                   </div>
                   <h3 className="text-sm font-semibold text-text-primary">{job.title}</h3>
-                  {job.location && (
-                    <span className="mt-1 flex items-center gap-1 text-caption text-text-secondary">
-                      <PinIcon /> {job.location}
-                    </span>
-                  )}
+                  <div className="mt-1.5 flex items-center gap-3 text-caption text-text-secondary flex-wrap">
+                    {job.location && (
+                      <span className="flex items-center gap-1"><PinIcon /> {job.location}</span>
+                    )}
+                    <span className="flex items-center gap-1"><EyeIcon /> {(job.views || 0).toLocaleString()} view{job.views === 1 ? '' : 's'}</span>
+                    <span className="flex items-center gap-1"><UsersIcon /> {job.applicantCount || 0} applicant{job.applicantCount === 1 ? '' : 's'}</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                   <Link

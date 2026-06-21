@@ -14,6 +14,7 @@ const jobSchema = new mongoose.Schema(
     skills: [String],
     salaryMin: Number,
     salaryMax: Number,
+    views: { type: Number, default: 0 },
     status: { type: String, enum: ['active', 'closed'], default: 'active' },
   },
   { timestamps: true }
