@@ -3,7 +3,9 @@ const verifyToken = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
 const loginRateLimiter = require('../middleware/loginRateLimiter');
 const validate = require('../middleware/validate');
-const { register, login, getMe, updateMe, verifyEmail, resendVerification } = require('../controllers/authController');
+const upload = require('../middleware/upload');
+const requireRole = require('../middleware/requireRole');
+const { register, login, getMe, updateMe, uploadResume, verifyEmail, resendVerification } = require('../controllers/authController');
 
 const profileLimits = validate({
   name:        { max: 100,  label: 'Name' },
@@ -22,5 +24,6 @@ router.get('/verify-email/:token', asyncHandler(verifyEmail));
 router.post('/resend-verification', verifyToken, asyncHandler(resendVerification));
 router.get('/me', verifyToken, asyncHandler(getMe));
 router.patch('/me', verifyToken, profileLimits, asyncHandler(updateMe));
+router.post('/me/resume', verifyToken, requireRole('candidate'), upload.single('resume'), asyncHandler(uploadResume));
 
 module.exports = router;

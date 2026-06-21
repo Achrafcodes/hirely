@@ -41,6 +41,14 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+  const uploadResume = async (file) => {
+    const fd = new FormData();
+    fd.append('resume', file);
+    const res = await api.uploadResume(fd);
+    setUser(res.data);
+    return res.data;
+  };
+
   const toggleSaveJob = async (jobId) => {
     const isSaved = user?.savedJobs?.some((id) => String(id) === String(jobId));
     // Optimistic update
@@ -69,7 +77,7 @@ export function AuthProvider({ children }) {
   const isJobSaved = (jobId) => user?.savedJobs?.some((id) => String(id) === String(jobId)) ?? false;
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, toggleSaveJob, isJobSaved }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, uploadResume, toggleSaveJob, isJobSaved }}>
       {children}
     </AuthContext.Provider>
   );

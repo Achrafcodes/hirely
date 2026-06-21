@@ -346,6 +346,28 @@ export default function JobDetailPage() {
                   </button>
                 </div>
               </form>
+            ) : user.resumeUrl ? (
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={handleApply}
+                    disabled={applying}
+                    className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97] disabled:opacity-40"
+                  >
+                    {applying ? 'Applying…' : 'Apply with profile resume'}
+                  </button>
+                  <button
+                    onClick={() => setShowApplyForm(true)}
+                    className="text-sm text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-full border border-border hover:border-text-disabled transition-colors"
+                  >
+                    Add cover letter / different resume
+                  </button>
+                </div>
+                <p className="text-caption text-text-disabled">
+                  Uses the resume saved on your profile. <Link to="/profile" className="text-accent hover:text-accent-hover transition-colors">Update it</Link>
+                </p>
+                {error && <p className="text-sm text-danger">{error}</p>}
+              </div>
             ) : (
               <button
                 onClick={() => setShowApplyForm(true)}

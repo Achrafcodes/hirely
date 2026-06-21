@@ -100,6 +100,16 @@ exports.getMe = (req, res) => {
   res.json(req.user);
 };
 
+exports.uploadResume = async (req, res) => {
+  if (!req.file) return res.status(400).json({ message: 'No resume file provided' });
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { resumeUrl: req.file.path },
+    { new: true }
+  );
+  res.json(user);
+};
+
 exports.updateMe = async (req, res) => {
   const allowed = ['name', 'location', 'bio', 'skills', 'resumeUrl', 'companyName', 'companyDesc', 'website'];
   const updates = {};

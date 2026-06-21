@@ -5,8 +5,24 @@ import Input from '../components/ui/Input';
 import useSEO from '../hooks/useSEO';
 
 export default function ProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, uploadResume } = useAuth();
   useSEO({ title: 'Your Profile' });
+  const [resumeUploading, setResumeUploading] = useState(false);
+
+  const handleResumeUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setResumeUploading(true);
+    try {
+      await uploadResume(file);
+      toast.success('Resume saved to your profile');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Resume upload failed');
+    } finally {
+      setResumeUploading(false);
+      e.target.value = '';
+    }
+  };
   const [form, setForm] = useState({
     name: user?.name || '',
     location: user?.location || '',
@@ -67,6 +83,34 @@ export default function ProfilePage() {
                     focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1 focus:ring-offset-base
                     transition-colors hover:border-text-disabled"
                 />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-text-secondary font-medium">Default resume</label>
+                <p className="text-caption text-text-disabled -mt-1">
+                  Saved once, used for one-click applying. PDF or Word, max 5 MB.
+                </p>
+                {user?.resumeUrl && (
+                  <a
+                    href={user.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-accent hover:text-accent-hover transition-colors w-fit"
+                  >
+                    View current resume ↗
+                  </a>
+                )}
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeUpload}
+                  disabled={resumeUploading}
+                  className="text-sm text-text-secondary
+                    file:mr-3 file:rounded-full file:border-0
+                    file:bg-surface-raised file:px-3 file:py-1.5 file:text-sm file:text-text-primary
+                    file:cursor-pointer hover:file:bg-border transition-colors disabled:opacity-40"
+                />
+                {resumeUploading && <p className="text-caption text-text-secondary">Uploading…</p>}
               </div>
             </>
           )}
