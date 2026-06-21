@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getMyApplications, withdrawApplication } from '../../api';
 import ApplicationCard from '../../components/applications/ApplicationCard';
+import useSEO from '../../hooks/useSEO';
 
 const STATUSES = ['', 'applied', 'reviewed', 'interview', 'rejected', 'hired'];
 
 export default function CandidateDashboard() {
+  useSEO({ title: 'My Applications' });
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

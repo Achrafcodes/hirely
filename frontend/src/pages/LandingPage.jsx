@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { getJobs, getStats } from '../api';
+import useSEO from '../hooks/useSEO';
 
 /* ── Icons ── */
 const PinIcon = () => (
@@ -192,6 +193,7 @@ function Testimonial({ quote, name, role, hue }) {
 export default function LandingPage() {
   const [jobs, setJobs] = useState([]);
   const [stats, setStats] = useState({ jobCount: null, employerCount: null });
+  useSEO();
   const statsRef    = useReveal();
   const stepsRef    = useReveal();
   const employerRef = useReveal();

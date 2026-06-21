@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { getJob, applyToJob } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
+import useSEO from '../hooks/useSEO';
 
 function AuthModal({ onClose, onSuccess }) {
   const { login, register } = useAuth();
@@ -125,12 +126,15 @@ export default function JobDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  useEffect(() => {
-    if (!job) return;
-    const companyName = job.employer?.companyName || job.employer?.name;
-    document.title = `${job.title} at ${companyName} — Hirely`;
-    return () => { document.title = 'Hirely — Find Work That Matters'; };
-  }, [job]);
+  const seoCompany = job?.employer?.companyName || job?.employer?.name;
+  useSEO(
+    job
+      ? {
+          title: `${job.title} at ${seoCompany}`,
+          description: `${seoCompany} is hiring a ${job.title}${job.location ? ` in ${job.location}` : ''}. ${(job.description || '').slice(0, 140).replace(/\s+/g, ' ').trim()}…`,
+        }
+      : {}
+  );
 
   const handleApply = async (e) => {
     e.preventDefault();

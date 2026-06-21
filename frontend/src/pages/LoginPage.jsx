@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
+import useSEO from '../hooks/useSEO';
 
 const BoltIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -13,6 +14,7 @@ const BoltIcon = () => (
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  useSEO({ title: 'Sign In', description: 'Sign in to your Hirely account to apply for jobs and track your applications.' });
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

@@ -2,9 +2,11 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
+import useSEO from '../hooks/useSEO';
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
+  useSEO({ title: 'Your Profile' });
   const [form, setForm] = useState({
     name: user?.name || '',
     location: user?.location || '',

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getJobs } from '../api';
 import JobCard from '../components/jobs/JobCard';
 import JobFilters from '../components/jobs/JobFilters';
+import useSEO from '../hooks/useSEO';
 
 function getFiltersFromParams(params) {
   return {
@@ -22,6 +23,8 @@ export default function JobsPage() {
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  useSEO({ title: 'Browse Jobs', description: 'Search and filter open tech roles from startups hiring now. Find your next job by title, location, skills, and salary on Hirely.' });
 
   const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
   const filters = getFiltersFromParams(searchParams);

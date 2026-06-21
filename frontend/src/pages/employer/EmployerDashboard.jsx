@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { getMyJobs, createJob, updateJob, deleteJob } from '../../api';
 import JobForm from '../../components/jobs/JobForm';
 import Badge from '../../components/ui/Badge';
+import useSEO from '../../hooks/useSEO';
 
 const PinIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -12,6 +13,7 @@ const PinIcon = () => (
 );
 
 export default function EmployerDashboard() {
+  useSEO({ title: 'Employer Dashboard' });
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

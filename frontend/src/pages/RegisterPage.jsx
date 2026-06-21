@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
+import useSEO from '../hooks/useSEO';
 
 const BoltIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -13,6 +14,7 @@ const BoltIcon = () => (
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  useSEO({ title: 'Create Account', description: 'Join Hirely to apply for tech jobs or post openings and find your next great hire.' });
   const [role, setRole] = useState('candidate');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [extra, setExtra] = useState({ companyName: '', skills: '', location: '' });
