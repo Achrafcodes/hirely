@@ -75,16 +75,9 @@ export default function JobCard({ job }) {
           <CompanyAvatar name={companyName} />
           <div className="flex-1 min-w-0">
             <p className="text-caption text-text-secondary mb-0.5 truncate">{companyName}</p>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-150 leading-snug">
-                {job.title}
-              </h3>
-              {isNew && (
-                <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/20">
-                  New
-                </span>
-              )}
-            </div>
+            <h3 className="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-150 leading-snug">
+              {job.title}
+            </h3>
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
             <div className="flex items-center gap-1.5">
@@ -103,7 +96,13 @@ export default function JobCard({ job }) {
               )}
               <Badge type={job.type}>{job.type.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</Badge>
             </div>
-            <span className="text-caption text-text-disabled">{timeAgo(job.createdAt)}</span>
+            {isNew ? (
+              <span className="flex items-center gap-1 text-caption font-semibold text-accent">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> New
+              </span>
+            ) : (
+              <span className="text-caption text-text-disabled">{timeAgo(job.createdAt)}</span>
+            )}
           </div>
         </div>
 
