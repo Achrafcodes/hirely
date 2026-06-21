@@ -34,6 +34,7 @@ app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date()
 
 app.use('/api/auth',         require('./routes/auth'));
 app.use('/api/jobs',         require('./routes/jobs'));
+app.use('/api/companies',    require('./routes/companies'));
 app.use('/api/applications', require('./routes/applications'));
 
 // Global error handler — never leaks stack traces to clients

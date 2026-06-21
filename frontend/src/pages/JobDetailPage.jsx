@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getJob, applyToJob } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -203,7 +203,13 @@ export default function JobDetailPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <p className="text-sm text-text-secondary">
-                {companyName}
+                {job.employer?._id ? (
+                  <Link to={`/companies/${job.employer._id}`} className="hover:text-accent transition-colors">
+                    {companyName}
+                  </Link>
+                ) : (
+                  companyName
+                )}
                 {job.employer?.website && (
                   <a
                     href={job.employer.website}
