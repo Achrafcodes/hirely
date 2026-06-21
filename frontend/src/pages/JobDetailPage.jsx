@@ -54,6 +54,13 @@ export default function JobDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!job) return;
+    const companyName = job.employer?.companyName || job.employer?.name;
+    document.title = `${job.title} at ${companyName} — Hirely`;
+    return () => { document.title = 'Hirely — Find Work That Matters'; };
+  }, [job]);
+
   const handleApply = async (e) => {
     e.preventDefault();
     setError('');
@@ -97,12 +104,6 @@ export default function JobDetailPage() {
   const salary = formatSalary(job.salaryMin, job.salaryMax);
   const postedDate = new Date(job.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const typeLabel = job.type ? job.type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : null;
-
-  // Dynamic page title
-  useEffect(() => {
-    if (job) document.title = `${job.title} at ${companyName} — Hirely`;
-    return () => { document.title = 'Hirely — Find Work That Matters'; };
-  }, [job, companyName]);
 
   return (
     <div className="max-w-3xl animate-fade-in-up" style={{ animationDelay: '0ms' }}>
