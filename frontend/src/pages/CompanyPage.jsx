@@ -71,11 +71,11 @@ export default function CompanyPage() {
       </button>
 
       {/* Company header */}
-      <div className="bg-surface border border-border rounded-xl p-8 mb-8">
+      <div className="bg-surface border border-border rounded-xl p-5 sm:p-8 mb-8">
         <div className="flex items-start gap-5">
           <CompanyAvatar name={companyName} />
           <div className="flex-1 min-w-0">
-            <h1 className="text-h1 text-text-primary">{companyName}</h1>
+            <h1 className="text-2xl sm:text-h1 text-text-primary break-words">{companyName}</h1>
             <div className="flex flex-wrap items-center gap-3 mt-2">
               {company.location && (
                 <span className="flex items-center gap-1.5 text-sm text-text-secondary">

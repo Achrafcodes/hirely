@@ -197,7 +197,7 @@ export default function JobDetailPage() {
       </button>
 
       {/* Header card */}
-      <div className="bg-surface border border-border rounded-xl p-8 mb-4">
+      <div className="bg-surface border border-border rounded-xl p-5 sm:p-8 mb-4">
         <div className="flex items-start gap-4 mb-6">
           <CompanyAvatar name={companyName} size="lg" />
           <div className="flex-1 min-w-0">
@@ -223,7 +223,7 @@ export default function JobDetailPage() {
               </p>
               <Badge status={job.status}>{job.status}</Badge>
             </div>
-            <h1 className="text-h1 text-text-primary">{job.title}</h1>
+            <h1 className="text-2xl sm:text-h1 text-text-primary break-words">{job.title}</h1>
           </div>
           {user?.role === 'candidate' && (
             <button

@@ -18,10 +18,10 @@ export default function ApplicantRow({ application, onStatusChange }) {
       <div className="flex items-start gap-3">
         <CandidateAvatar name={candidate?.name} />
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-text-primary">{candidate?.name}</p>
-              <p className="text-caption text-text-secondary">{candidate?.email}</p>
+              <p className="text-sm font-semibold text-text-primary truncate">{candidate?.name}</p>
+              <p className="text-caption text-text-secondary truncate">{candidate?.email}</p>
               {candidate?.skills?.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {candidate.skills.slice(0, 4).map((s) => (
@@ -32,7 +32,7 @@ export default function ApplicantRow({ application, onStatusChange }) {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap sm:shrink-0">
               {resumeUrl && (
                 <a
                   href={resumeUrl}

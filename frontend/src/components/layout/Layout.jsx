@@ -2,10 +2,12 @@ import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import ScrollToTop from './ScrollToTop';
 
 export default function Layout() {
   return (
     <div className="min-h-screen bg-base flex flex-col">
+      <ScrollToTop />
       <Navbar />
       <main className="mx-auto max-w-6xl w-full px-4 py-8 sm:px-6 flex-1">
         <Outlet />

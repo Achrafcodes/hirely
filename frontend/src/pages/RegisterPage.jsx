@@ -60,7 +60,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-surface border border-border rounded-xl p-8">
+        <div className="bg-surface border border-border rounded-xl p-6 sm:p-8">
           <div className="mb-6">
             <h1 className="text-h2 text-text-primary">Create account</h1>
             <p className="text-sm text-text-secondary mt-1">Start hiring or find your next role</p>
