@@ -5,6 +5,7 @@ import { getJob, applyToJob, getRelatedJobs } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
 import JobCard from '../components/jobs/JobCard';
+import ShareButton from '../components/ui/ShareButton';
 import useSEO from '../hooks/useSEO';
 
 function AuthModal({ onClose, onSuccess }) {
@@ -231,28 +232,36 @@ export default function JobDetailPage() {
             </div>
             <h1 className="text-2xl sm:text-h1 text-text-primary break-words">{job.title}</h1>
           </div>
-          {user?.role === 'candidate' && (
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  const nowSaved = await toggleSaveJob(job._id);
-                  toast.success(nowSaved ? 'Job saved' : 'Removed from saved');
-                } catch {
-                  toast.error('Could not update saved jobs');
-                }
-              }}
-              aria-label={isJobSaved(job._id) ? 'Remove from saved jobs' : 'Save job'}
-              aria-pressed={isJobSaved(job._id)}
-              className={`shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border transition-all duration-150 active:scale-90 ${
-                isJobSaved(job._id)
-                  ? 'text-accent border-accent/40 bg-accent/10'
-                  : 'text-text-disabled border-border hover:text-text-secondary hover:bg-surface-raised'
-              }`}
-            >
-              <HeartIcon filled={isJobSaved(job._id)} />
-            </button>
-          )}
+          <div className="flex items-center gap-2 shrink-0">
+            <ShareButton
+              title={`${job.title} at ${companyName}`}
+              text={`${companyName} is hiring a ${job.title}${job.location ? ` in ${job.location}` : ''} on Hustl`}
+              label=""
+              className="w-9 h-9 justify-center"
+            />
+            {user?.role === 'candidate' && (
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const nowSaved = await toggleSaveJob(job._id);
+                    toast.success(nowSaved ? 'Job saved' : 'Removed from saved');
+                  } catch {
+                    toast.error('Could not update saved jobs');
+                  }
+                }}
+                aria-label={isJobSaved(job._id) ? 'Remove from saved jobs' : 'Save job'}
+                aria-pressed={isJobSaved(job._id)}
+                className={`shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border transition-all duration-150 active:scale-90 ${
+                  isJobSaved(job._id)
+                    ? 'text-accent border-accent/40 bg-accent/10'
+                    : 'text-text-disabled border-border hover:text-text-secondary hover:bg-surface-raised'
+                }`}
+              >
+                <HeartIcon filled={isJobSaved(job._id)} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Meta row */}

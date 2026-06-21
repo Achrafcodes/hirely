@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getCompany } from '../api';
 import JobCard from '../components/jobs/JobCard';
+import ShareButton from '../components/ui/ShareButton';
 import useSEO from '../hooks/useSEO';
 
 const PinIcon = () => (
@@ -75,7 +76,15 @@ export default function CompanyPage() {
         <div className="flex items-start gap-5">
           <CompanyAvatar name={companyName} />
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-h1 text-text-primary break-words">{companyName}</h1>
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-2xl sm:text-h1 text-text-primary break-words">{companyName}</h1>
+              <ShareButton
+                title={`${companyName} on Hustl`}
+                text={`${companyName} is hiring on Hustl — ${jobs.length} open role${jobs.length !== 1 ? 's' : ''}`}
+                label=""
+                className="w-9 h-9 justify-center mt-0.5"
+              />
+            </div>
             <div className="flex flex-wrap items-center gap-3 mt-2">
               {company.location && (
                 <span className="flex items-center gap-1.5 text-sm text-text-secondary">
