@@ -5,6 +5,76 @@ import { getJob, applyToJob } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
 
+function AuthModal({ onClose, onSuccess }) {
+  const { login, register } = useAuth();
+  const [tab, setTab] = useState('login');
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'candidate' });
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setBusy(true);
+    try {
+      if (tab === 'login') {
+        await login({ email: form.email, password: form.password });
+      } else {
+        await register({ name: form.name, email: form.email, password: form.password, role: 'candidate' });
+      }
+      toast.success(tab === 'login' ? 'Signed in!' : 'Account created!');
+      onSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const inputCls = 'w-full rounded-lg bg-surface-raised border border-border px-3 py-2.5 text-sm text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent hover:border-text-disabled transition-colors';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-base/70 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-sm bg-surface border border-border rounded-2xl shadow-modal p-6 animate-fade-in-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-lg text-text-disabled hover:text-text-primary hover:bg-surface-raised transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <p className="text-sm text-text-secondary mb-1">To apply for this role</p>
+        <h3 className="text-h3 text-text-primary mb-5">Sign in to your account</h3>
+
+        <div className="flex gap-1 p-1 bg-surface-raised rounded-lg mb-5">
+          {['login', 'register'].map((t) => (
+            <button key={t} type="button" onClick={() => { setTab(t); setError(''); }}
+              className={`flex-1 py-1.5 rounded-md text-sm font-medium transition-all ${tab === t ? 'bg-surface text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'}`}>
+              {t === 'login' ? 'Sign in' : 'Create account'}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          {tab === 'register' && (
+            <input className={inputCls} placeholder="Full name" value={form.name} onChange={set('name')} required />
+          )}
+          <input className={inputCls} type="email" placeholder="Email address" value={form.email} onChange={set('email')} required />
+          <input className={inputCls} type="password" placeholder="Password" value={form.password} onChange={set('password')} required />
+          {error && <p className="text-sm text-danger">{error}</p>}
+          <button type="submit" disabled={busy}
+            className="w-full py-2.5 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-all active:scale-[0.97] disabled:opacity-40 mt-1">
+            {busy ? (tab === 'login' ? 'Signing in…' : 'Creating account…') : (tab === 'login' ? 'Sign in & continue' : 'Create account & continue')}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 const PinIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
@@ -46,6 +116,7 @@ export default function JobDetailPage() {
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [error, setError] = useState('');
   const [loadError, setLoadError] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     getJob(id)
@@ -246,14 +317,24 @@ export default function JobDetailPage() {
         {!user && job.status === 'active' && (
           <div className="pt-6">
             <button
-              onClick={() => navigate('/register')}
+              onClick={() => setShowAuthModal(true)}
               className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-2.5 rounded-full transition-all duration-150 active:scale-[0.97]"
             >
-              Sign up to apply
+              Apply now
             </button>
           </div>
         )}
       </div>
+
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={() => {
+            setShowAuthModal(false);
+            setShowApplyForm(true);
+          }}
+        />
+      )}
     </div>
   );
 }
