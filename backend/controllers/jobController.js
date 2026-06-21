@@ -1,5 +1,14 @@
 const Job = require('../models/Job');
+const User = require('../models/User');
 const escapeStringRegexp = require('escape-string-regexp');
+
+exports.getStats = async (req, res) => {
+  const [jobCount, employerCount] = await Promise.all([
+    Job.countDocuments({ status: 'active' }),
+    User.countDocuments({ role: 'employer' }),
+  ]);
+  res.json({ jobCount, employerCount });
+};
 
 exports.createJob = async (req, res) => {
   const { title, description, location, type, skills, salaryMin, salaryMax } = req.body;

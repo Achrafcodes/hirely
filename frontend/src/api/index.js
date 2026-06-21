@@ -17,6 +17,7 @@ export const verifyEmail = (token) => api.get(`/auth/verify-email/${token}`);
 export const resendVerification = () => api.post('/auth/resend-verification');
 
 // Jobs
+export const getStats = () => api.get('/jobs/stats');
 export const getJobs = (params) => api.get('/jobs', { params });
 export const getMyJobs = () => api.get('/jobs/mine');
 export const getJob = (id) => api.get(`/jobs/${id}`);

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { getJobs } from '../api';
+import { getJobs, getStats } from '../api';
 
 /* ── Icons ── */
 const PinIcon = () => (
@@ -188,6 +188,7 @@ function Testimonial({ quote, name, role, hue }) {
 /* ──────────────────────────────────────── */
 export default function LandingPage() {
   const [jobs, setJobs] = useState([]);
+  const [stats, setStats] = useState({ jobCount: null, employerCount: null });
   const statsRef    = useReveal();
   const stepsRef    = useReveal();
   const employerRef = useReveal();
@@ -196,6 +197,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     getJobs({ limit: 4, status: 'active' }).then((r) => setJobs(r.data.jobs)).catch(() => {});
+    getStats().then((r) => setStats(r.data)).catch(() => {});
   }, []);
 
   return (
@@ -217,7 +219,9 @@ export default function LandingPage() {
             <div className="animate-fade-in-up inline-flex items-center gap-2 bg-surface/80 backdrop-blur-sm border border-border rounded-full px-4 py-1.5 mb-6"
               style={{ animationDelay: '0ms' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0" />
-              <span className="text-caption text-text-secondary">2,400+ jobs from top startups — updated daily</span>
+              <span className="text-caption text-text-secondary">
+                {stats.jobCount != null ? `${stats.jobCount}+ jobs` : 'Jobs'} from top startups — updated daily
+              </span>
             </div>
 
             <h1 className="animate-fade-in-up text-text-primary font-bold mb-5"
@@ -258,17 +262,32 @@ export default function LandingPage() {
                 ))}
               </div>
               <span className="text-caption text-text-secondary">
-                Join <span className="text-text-primary font-semibold">12,000+</span> candidates already hired
+                Join <span className="text-text-primary font-semibold">
+                  {stats.employerCount != null ? `${stats.employerCount}+` : 'many'}
+                </span> companies already hiring
               </span>
             </div>
           </div>
 
           {/* Right — floating job previews */}
           <div className="hidden lg:flex flex-col gap-3 max-w-sm ml-auto w-full">
-            <HeroJobCard title="Senior Frontend Engineer" company="Vercel" location="Remote" tag="New" delay={500} />
-            <HeroJobCard title="Product Designer" company="Linear" location="San Francisco" tag="Hot" delay={620} />
-            <HeroJobCard title="Backend Engineer" company="Supabase" location="Remote" tag="New" delay={740} />
-            <HeroJobCard title="Growth Lead" company="Notion" location="New York" tag="Urgent" delay={860} />
+            {jobs.slice(0, 4).map((job, i) => (
+              <HeroJobCard
+                key={job._id}
+                title={job.title}
+                company={job.employer?.companyName || job.employer?.name || 'Company'}
+                location={job.location}
+                tag={i === 0 ? 'New' : i === 1 ? 'Hot' : 'New'}
+                delay={500 + i * 120}
+              />
+            ))}
+            {jobs.length === 0 && (
+              <>
+                <HeroJobCard title="Senior Frontend Engineer" company="Your Company" location="Remote" tag="New" delay={500} />
+                <HeroJobCard title="Product Designer" company="Your Company" location="Remote" tag="Hot" delay={620} />
+                <HeroJobCard title="Backend Engineer" company="Your Company" location="Remote" tag="New" delay={740} />
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -289,13 +308,13 @@ export default function LandingPage() {
       <section ref={statsRef} className="reveal py-10 sm:py-14">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { value: 2400, suffix: '+', label: 'Open roles', icon: (
+            { value: stats.jobCount ?? 0, suffix: '+', label: 'Open roles', icon: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             )},
-            { value: 500, suffix: '+', label: 'Companies hiring', icon: (
+            { value: stats.employerCount ?? 0, suffix: '+', label: 'Companies hiring', icon: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             )},
-            { value: 98, suffix: '%', label: 'Placement rate', icon: (
+            { value: jobs.length, suffix: '', label: 'New jobs today', icon: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             )},
             { value: 14, suffix: 'd', label: 'Avg. time to hire', icon: (
@@ -471,7 +490,9 @@ export default function LandingPage() {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              <span className="text-caption text-accent font-medium">Join 12,000+ hired professionals</span>
+              <span className="text-caption text-accent font-medium">
+                Join {stats.employerCount != null ? `${stats.employerCount}+` : 'growing'} companies already hiring
+              </span>
             </div>
             <h2 className="text-text-primary font-bold mb-3"
               style={{ fontSize: 'clamp(1.6rem, 5vw, 2.5rem)', letterSpacing: '-0.03em' }}>

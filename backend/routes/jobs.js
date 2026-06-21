@@ -12,6 +12,7 @@ const {
   updateJob,
   deleteJob,
   getApplicants,
+  getStats,
 } = require('../controllers/jobController');
 const { applyToJob } = require('../controllers/applicationController');
 
@@ -21,6 +22,7 @@ const jobLimits = validate({
   location:    { max: 200,   label: 'Location' },
 });
 
+router.get('/stats',                                                                  asyncHandler(getStats));
 router.get('/',                                                                       asyncHandler(getJobs));
 router.get('/mine',   verifyToken, requireRole('employer'),                           asyncHandler(getMyJobs));
 router.get('/:id',                                                                    asyncHandler(getJob));
