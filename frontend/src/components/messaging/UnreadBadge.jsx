@@ -8,7 +8,7 @@ const playNotif = () => {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const t = ctx.currentTime;
 
-    const ping = (freq, startAt, dur) => {
+    const ping = (freq, vol, startAt, dur) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
@@ -16,15 +16,16 @@ const playNotif = () => {
       osc.type = 'sine';
       osc.frequency.value = freq;
       gain.gain.setValueAtTime(0, startAt);
-      gain.gain.linearRampToValueAtTime(0.12, startAt + 0.01);
+      gain.gain.linearRampToValueAtTime(vol, startAt + 0.008);
       gain.gain.exponentialRampToValueAtTime(0.001, startAt + dur);
       osc.start(startAt);
       osc.stop(startAt + dur);
     };
 
-    // Two soft ascending notes — like a gentle chime
-    ping(1047, t, 0.25);       // C6
-    ping(1319, t + 0.1, 0.3);  // E6
+    // Messenger-style: two quick soft pings, main tone + quiet harmonic for warmth
+    ping(1396, 0.13, t, 0.22);        // F6 — main ping
+    ping(2093, 0.04, t, 0.18);        // C7 — harmonic, adds warmth
+    ping(1047, 0.10, t + 0.11, 0.20); // C6 — follow-up note
   } catch {}
 };
 
