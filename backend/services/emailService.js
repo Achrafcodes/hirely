@@ -101,3 +101,20 @@ exports.sendStatusUpdateEmail = async (to, name, jobTitle, status) => {
     `),
   });
 };
+
+exports.sendPasswordResetEmail = async (to, name, token) => {
+  const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Reset your Hustl password',
+    html: emailBase(`
+      <h2 style="margin:0 0 8px;font-size:20px;font-weight:500;color:#F4F4F5">Reset your password</h2>
+      <p style="margin:0 0 28px;font-size:15px;color:#A1A1AA;line-height:1.6">Hi ${name}, we received a request to reset your password. Click the button below — this link expires in <strong style="color:#F4F4F5">1 hour</strong>.</p>
+      <a href="${url}" style="display:inline-block;background:#E8A030;color:#0C0C0C;text-decoration:none;padding:11px 28px;border-radius:5px;font-weight:500;font-size:14px">
+        Reset password →
+      </a>
+      <p style="margin:28px 0 0;font-size:13px;color:#666672">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
+    `),
+  });
+};

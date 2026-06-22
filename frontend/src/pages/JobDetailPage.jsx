@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getJob, applyToJob, getRelatedJobs, createConversation } from '../api';
 import { useAuth } from '../context/AuthContext';
+import useVerificationGate from '../hooks/useVerificationGate';
 import Badge from '../components/ui/Badge';
 import JobCard from '../components/jobs/JobCard';
 import ShareButton from '../components/ui/ShareButton';
@@ -116,6 +117,7 @@ export default function JobDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isJobSaved, toggleSaveJob } = useAuth();
+  const verifyGate = useVerificationGate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
@@ -365,7 +367,7 @@ export default function JobDetailPage() {
                     {applying ? 'Applying…' : 'Apply with profile resume'}
                   </button>
                   <button
-                    onClick={() => setShowApplyForm(true)}
+                    onClick={() => verifyGate() && setShowApplyForm(true)}
                     className="text-sm text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-md border border-border hover:border-text-disabled transition-colors"
                   >
                     Add cover letter / different resume
@@ -377,7 +379,7 @@ export default function JobDetailPage() {
               </div>
             ) : (
               <button
-                onClick={() => setShowApplyForm(true)}
+                onClick={() => verifyGate() && setShowApplyForm(true)}
                 className="bg-accent hover:bg-accent-hover text-base font-medium px-6 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
               >
                 Apply now

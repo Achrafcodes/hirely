@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
-import { resendVerification } from '../api';
 import Input from '../components/ui/Input';
 import GoogleButton from '../components/ui/GoogleButton';
 import useSEO from '../hooks/useSEO';
@@ -14,24 +13,18 @@ export default function LoginPage() {
   useSEO({ title: 'Sign In', description: 'Sign in to your Hustl account to apply for jobs and track your applications.' });
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [unverified, setUnverified] = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUnverified(false);
     setLoading(true);
     try {
       const user = await login(form);
       toast.success(`Welcome back, ${user.name}!`);
       navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
     } catch (err) {
-      if (err.response?.data?.unverified) {
-        setUnverified(true);
-      } else {
-        toast.error(err.response?.data?.message || 'Sign in failed');
-      }
+      toast.error(err.response?.data?.message || 'Sign in failed');
     } finally {
       setLoading(false);
     }
@@ -59,13 +52,6 @@ export default function LoginPage() {
             <p className="text-sm text-text-secondary mt-1">Sign in to your account</p>
           </div>
 
-          {unverified && (
-            <div className="bg-warning/10 border border-warning/30 rounded-lg px-4 py-3 mb-1">
-              <p className="text-sm font-medium text-warning mb-0.5">Email not verified</p>
-              <p className="text-sm text-text-secondary">Check your inbox for the verification link. Check your spam folder if you don't see it.</p>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
               label="Email"
@@ -76,15 +62,22 @@ export default function LoginPage() {
               autoComplete="email"
               placeholder="you@example.com"
             />
-            <Input
-              label="Password"
-              type="password"
-              value={form.password}
-              onChange={set('password')}
-              required
-              autoComplete="current-password"
-              placeholder="••••••••"
-            />
+            <div>
+              <Input
+                label="Password"
+                type="password"
+                value={form.password}
+                onChange={set('password')}
+                required
+                autoComplete="current-password"
+                placeholder="••••••••"
+              />
+              <div className="mt-1.5 text-right">
+                <Link to="/forgot-password" className="text-xs text-text-disabled hover:text-accent transition-colors">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
 
             <button
               type="submit"

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
-const { sendVerificationEmail, sendWelcomeEmail } = require('../services/emailService');
+const { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/emailService');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -96,10 +96,6 @@ exports.login = async (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  if (!user.isVerified) {
-    return res.status(403).json({ message: 'Please verify your email before signing in.', unverified: true });
-  }
-
   res.json({ token: signToken(user._id), user });
 };
 
@@ -136,6 +132,47 @@ exports.uploadResume = async (req, res) => {
     { new: true }
   );
   res.json(user);
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+  // Always respond 200 to avoid user enumeration
+  if (!user || user.googleId) {
+    return res.json({ message: 'If that email exists, a reset link has been sent.' });
+  }
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = token;
+  user.resetPasswordExpiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+  await user.save();
+
+  await sendPasswordResetEmail(user.email, user.name, token).catch(() => {});
+  res.json({ message: 'If that email exists, a reset link has been sent.' });
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  if (!password || password.length < 8) {
+    return res.status(400).json({ message: 'Password must be at least 8 characters' });
+  }
+
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpiry: { $gt: new Date() },
+  });
+  if (!user) return res.status(400).json({ message: 'Reset link is invalid or has expired' });
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiry = undefined;
+  await user.save();
+
+  res.json({ message: 'Password updated. You can now sign in.' });
 };
 
 exports.updateMe = async (req, res) => {

@@ -5,7 +5,7 @@ const loginRateLimiter = require('../middleware/loginRateLimiter');
 const validate = require('../middleware/validate');
 const upload = require('../middleware/upload');
 const requireRole = require('../middleware/requireRole');
-const { register, login, getMe, updateMe, uploadResume, verifyEmail, resendVerification, completeOnboarding } = require('../controllers/authController');
+const { register, login, getMe, updateMe, uploadResume, verifyEmail, resendVerification, completeOnboarding, forgotPassword, resetPassword } = require('../controllers/authController');
 
 const profileLimits = validate({
   name:        { max: 100,  label: 'Name' },
@@ -26,5 +26,7 @@ router.get('/me', verifyToken, asyncHandler(getMe));
 router.patch('/me', verifyToken, profileLimits, asyncHandler(updateMe));
 router.post('/me/resume', verifyToken, requireRole('candidate'), upload.single('resume'), asyncHandler(uploadResume));
 router.post('/onboarding', verifyToken, asyncHandler(completeOnboarding));
+router.post('/forgot-password', asyncHandler(forgotPassword));
+router.post('/reset-password/:token', asyncHandler(resetPassword));
 
 module.exports = router;

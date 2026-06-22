@@ -50,6 +50,11 @@ export const updateApplicationStatus = (id, status) =>
 export const withdrawApplication = (id) => api.delete(`/applications/${id}`);
 
 // Messaging
+// Password reset
+export const forgotPassword = (email) => api.post('/auth/forgot-password', { email });
+export const resetPassword = (token, password) => api.post(`/auth/reset-password/${token}`, { password });
+
+// Messaging
 export const getConversations = () => api.get('/conversations');
 export const createConversation = (data) => api.post('/conversations', data);
 export const getUnreadCount = () => api.get('/conversations/unread');

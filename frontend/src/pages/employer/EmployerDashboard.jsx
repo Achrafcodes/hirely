@@ -8,6 +8,7 @@ import ConfirmDialog from '../../components/ui/ConfirmDialog';
 import { RowListSkeleton } from '../../components/ui/Skeleton';
 import useSEO from '../../hooks/useSEO';
 import { useAuth } from '../../context/AuthContext';
+import useVerificationGate from '../../hooks/useVerificationGate';
 
 const PinIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -37,6 +38,7 @@ function StatCard({ label, value }) {
 export default function EmployerDashboard() {
   useSEO({ title: 'Employer Dashboard' });
   const { user } = useAuth();
+  const verifyGate = useVerificationGate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -151,7 +153,7 @@ export default function EmployerDashboard() {
           </p>
         </div>
         <button
-          onClick={() => { setShowForm(true); setEditing(null); }}
+          onClick={() => verifyGate() && (setShowForm(true), setEditing(null))}
           className="shrink-0 inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-base text-sm font-medium px-5 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
         >
           + Post a job
