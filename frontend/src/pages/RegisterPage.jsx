@@ -2,14 +2,53 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { resendVerification } from '../api';
 import Input from '../components/ui/Input';
 import useSEO from '../hooks/useSEO';
 
-const BoltIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-);
+function CheckEmailScreen({ email }) {
+  const [resending, setResending] = useState(false);
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await resendVerification();
+      toast.success('Verification email resent!');
+    } catch {
+      toast.error('Could not resend email. Try again.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[85vh] flex items-center justify-center px-4">
+      <div className="w-full max-w-sm text-center animate-fade-in-up">
+        <div className="w-14 h-14 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8A030" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <h1 className="text-h2 text-text-primary mb-2">Check your email</h1>
+        <p className="text-body text-text-secondary mb-1">We sent a verification link to</p>
+        <p className="font-mono text-sm text-accent mb-6">{email}</p>
+        <p className="text-sm text-text-disabled mb-6">Click the link in the email to activate your account. The link expires in 24 hours.</p>
+        <div className="flex flex-col gap-3">
+          <Link to="/login" className="w-full bg-accent hover:bg-accent-hover text-base font-medium py-2.5 rounded-md transition-all duration-150 text-center">
+            Go to sign in
+          </Link>
+          <button
+            onClick={handleResend}
+            disabled={resending}
+            className="text-sm text-text-secondary hover:text-accent transition-colors disabled:opacity-50"
+          >
+            {resending ? 'Sending…' : "Didn't get it? Resend"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -18,15 +57,14 @@ export default function RegisterPage() {
   const [role, setRole] = useState('candidate');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [extra, setExtra] = useState({ companyName: '', skills: '', location: '' });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setEx = (k) => (e) => setExtra((f) => ({ ...f, [k]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
     try {
       const payload = { ...form, role };
@@ -35,15 +73,16 @@ export default function RegisterPage() {
         payload.location = extra.location;
       }
       if (role === 'employer') payload.companyName = extra.companyName;
-      const user = await register(payload);
-      toast.success('Account created!');
-      navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
+      await register(payload);
+      setRegistered(true);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
+
+  if (registered) return <CheckEmailScreen email={form.email} />;
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-8">

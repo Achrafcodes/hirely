@@ -24,10 +24,8 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (data) => {
-    const res = await api.register(data);
-    localStorage.setItem('token', res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    await api.register(data);
+    // Don't log in automatically — user must verify email first
   };
 
   const logout = () => {

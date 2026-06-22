@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
-const { sendVerificationEmail } = require('../services/emailService');
+const { sendVerificationEmail, sendWelcomeEmail } = require('../services/emailService');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -60,6 +60,8 @@ exports.verifyEmail = async (req, res) => {
   user.verificationTokenExpiry = undefined;
   await user.save();
 
+  sendWelcomeEmail(user.email, user.name).catch(() => {});
+
   res.json({ message: 'Email verified successfully' });
 };
 
@@ -91,6 +93,10 @@ exports.login = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user || !(await user.matchPassword(password))) {
     return res.status(401).json({ message: 'Invalid credentials' });
+  }
+
+  if (!user.isVerified) {
+    return res.status(403).json({ message: 'Please verify your email before signing in.', unverified: true });
   }
 
   res.json({ token: signToken(user._id), user });

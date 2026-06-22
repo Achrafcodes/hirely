@@ -1,9 +1,16 @@
 require('./setup');
 const request = require('supertest');
+const mongoose = require('mongoose');
 const app = require('../server');
+const User = require('../models/User');
 
 const candidate = { name: 'Test User', email: 'candidate@test.com', password: 'password123', role: 'candidate' };
 const employer  = { name: 'Test Corp',  email: 'employer@test.com',  password: 'password123', role: 'employer' };
+
+async function registerAndVerify(data) {
+  await request(app).post('/api/auth/register').send(data);
+  await User.findOneAndUpdate({ email: data.email }, { isVerified: true });
+}
 
 // ── Register ─────────────────────────────────────────────────────────────────
 
@@ -48,13 +55,20 @@ describe('POST /api/auth/register', () => {
 
 describe('POST /api/auth/login', () => {
   beforeEach(async () => {
-    await request(app).post('/api/auth/register').send(candidate);
+    await registerAndVerify(candidate);
   });
 
   it('returns JWT on valid credentials', async () => {
     const res = await request(app).post('/api/auth/login').send({ email: candidate.email, password: candidate.password });
     expect(res.status).toBe(200);
     expect(res.body.token).toBeDefined();
+  });
+
+  it('returns 403 for unverified account', async () => {
+    await request(app).post('/api/auth/register').send({ ...candidate, email: 'unverified@test.com' });
+    const res = await request(app).post('/api/auth/login').send({ email: 'unverified@test.com', password: candidate.password });
+    expect(res.status).toBe(403);
+    expect(res.body.unverified).toBe(true);
   });
 
   it('returns 401 on wrong password', async () => {
@@ -84,7 +98,8 @@ describe('GET /api/auth/me', () => {
   let token;
 
   beforeEach(async () => {
-    const res = await request(app).post('/api/auth/register').send(candidate);
+    await registerAndVerify(candidate);
+    const res = await request(app).post('/api/auth/login').send({ email: candidate.email, password: candidate.password });
     token = res.body.token;
   });
 

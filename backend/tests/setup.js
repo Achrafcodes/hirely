@@ -1,8 +1,9 @@
 // Mock external services before any modules load
 jest.mock('../services/emailService', () => ({
+  sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+  sendWelcomeEmail: jest.fn().mockResolvedValue(undefined),
   sendApplicationConfirmation: jest.fn().mockResolvedValue(undefined),
   sendStatusUpdateEmail: jest.fn().mockResolvedValue(undefined),
-  sendWelcomeEmail: jest.fn().mockResolvedValue(undefined),
 }));
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
