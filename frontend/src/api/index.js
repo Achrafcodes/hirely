@@ -47,3 +47,10 @@ export const getMyApplications = (params) => api.get('/applications/me', { param
 export const updateApplicationStatus = (id, status) =>
   api.patch(`/applications/${id}/status`, { status });
 export const withdrawApplication = (id) => api.delete(`/applications/${id}`);
+
+// Messaging
+export const getConversations = () => api.get('/conversations');
+export const createConversation = (data) => api.post('/conversations', data);
+export const getUnreadCount = () => api.get('/conversations/unread');
+export const getMessages = (conversationId) => api.get('/messages', { params: { conversationId } });
+export const sendMessage = (data) => api.post('/messages', data);

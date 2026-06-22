@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const { Server: SocketServer } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
@@ -8,12 +10,13 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 
 const app = express();
+const httpServer = http.createServer(app);
 
 if (process.env.NODE_ENV !== 'test') connectDB();
 
 // CORS — only allow the configured frontend origin
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',');
-app.use(cors({
+const corsOptions = {
   origin: (origin, cb) => {
     // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
@@ -22,7 +25,35 @@ app.use(cors({
     cb(err);
   },
   credentials: true,
-}));
+};
+app.use(cors(corsOptions));
+
+// Socket.io
+if (process.env.NODE_ENV !== 'test') {
+  const io = new SocketServer(httpServer, { cors: corsOptions });
+  app.set('io', io);
+
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (!token) return next(new Error('No token'));
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.userId = decoded.id;
+      next();
+    } catch {
+      next(new Error('Invalid token'));
+    }
+  });
+
+  io.on('connection', (socket) => {
+    socket.on('join_conversation', (conversationId) => {
+      socket.join(conversationId);
+    });
+    socket.on('leave_conversation', (conversationId) => {
+      socket.leave(conversationId);
+    });
+  });
+}
 
 app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
@@ -36,6 +67,7 @@ app.use('/api/auth',         require('./routes/auth'));
 app.use('/api/jobs',         require('./routes/jobs'));
 app.use('/api/companies',    require('./routes/companies'));
 app.use('/api/applications', require('./routes/applications'));
+app.use('/api',              require('./routes/messaging'));
 
 // Global error handler — never leaks stack traces to clients
 app.use((err, req, res, _next) => {
@@ -65,5 +97,5 @@ module.exports = app;
 
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }

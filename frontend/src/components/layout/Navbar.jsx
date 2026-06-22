@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import UnreadBadge from '../messaging/UnreadBadge';
 
 const BoltIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
@@ -83,6 +84,14 @@ export default function Navbar() {
                 Employers
               </Link>
               {user && <NavLink to={dashboardPath} className={navLinkClass}>Dashboard</NavLink>}
+              {user && (
+                <NavLink to="/messages" className={navLinkClass}>
+                  <span className="relative inline-flex">
+                    Messages
+                    <UnreadBadge />
+                  </span>
+                </NavLink>
+              )}
             </nav>
 
             {/* Desktop right actions */}

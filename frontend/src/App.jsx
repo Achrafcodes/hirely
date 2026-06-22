@@ -15,6 +15,7 @@ import ApplicantsPage from './pages/employer/ApplicantsPage';
 import CandidateDashboard from './pages/candidate/CandidateDashboard';
 import VerifyEmailPage from './pages/VerifyEmailPage';
 import NotFoundPage from './pages/NotFoundPage';
+import MessagesPage from './pages/MessagesPage';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="verify-email/:token" element={<VerifyEmailPage />} />
 
         <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
 
         <Route path="dashboard/employer" element={
           <ProtectedRoute role="employer"><EmployerDashboard /></ProtectedRoute>

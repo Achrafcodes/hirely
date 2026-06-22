@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { getJob, applyToJob, getRelatedJobs } from '../api';
+import { getJob, applyToJob, getRelatedJobs, createConversation } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Badge from '../components/ui/Badge';
 import JobCard from '../components/jobs/JobCard';
@@ -382,6 +382,21 @@ export default function JobDetailPage() {
                 Apply now
               </button>
             )}
+          </div>
+        )}
+
+        {/* Message employer — only visible to candidates who have applied */}
+        {user?.role === 'candidate' && applied && job.employer?._id && (
+          <div className="pt-3">
+            <button
+              onClick={async () => {
+                const res = await createConversation({ recipientId: job.employer._id, jobId: job._id });
+                navigate(`/messages?conversation=${res.data.conversationId}`);
+              }}
+              className="text-sm font-medium text-text-secondary border border-border hover:border-accent hover:text-accent px-4 py-2.5 rounded-md transition-all duration-150"
+            >
+              Message employer →
+            </button>
           </div>
         )}
 

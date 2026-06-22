@@ -1,0 +1,33 @@
+import { useEffect, useState } from 'react';
+import { useSocket } from '../../context/SocketContext';
+import * as api from '../../api';
+
+export default function UnreadBadge() {
+  const [count, setCount] = useState(0);
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    api.getUnreadCount()
+      .then((res) => setCount(res.data.unread))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handler = () => {
+      api.getUnreadCount()
+        .then((res) => setCount(res.data.unread))
+        .catch(() => {});
+    };
+    socket.on('new_message', handler);
+    return () => socket.off('new_message', handler);
+  }, [socket]);
+
+  if (count === 0) return null;
+
+  return (
+    <span className="absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-accent text-base text-[10px] font-medium flex items-center justify-center">
+      {count > 9 ? '9+' : count}
+    </span>
+  );
+}

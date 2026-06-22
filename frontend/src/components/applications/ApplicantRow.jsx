@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import Badge from '../ui/Badge';
+import * as api from '../../api';
 
 const STATUSES = ['applied', 'reviewed', 'interview', 'rejected', 'hired'];
 
@@ -11,7 +13,13 @@ function CandidateAvatar({ name }) {
 }
 
 export default function ApplicantRow({ application, onStatusChange }) {
-  const { candidate, status, resumeUrl, coverLetter } = application;
+  const { candidate, status, resumeUrl, coverLetter, job } = application;
+  const navigate = useNavigate();
+
+  const handleMessage = async () => {
+    const res = await api.createConversation({ recipientId: candidate._id, jobId: job?._id });
+    navigate(`/messages?conversation=${res.data.conversationId}`);
+  };
 
   return (
     <div className="featured-card bg-surface rounded-xl border border-border p-5">
@@ -43,6 +51,12 @@ export default function ApplicantRow({ application, onStatusChange }) {
                   Resume ↗
                 </a>
               )}
+              <button
+                onClick={handleMessage}
+                className="text-sm font-medium text-text-secondary border border-border hover:border-accent hover:text-accent px-3 py-1.5 rounded-md transition-all duration-150"
+              >
+                Message →
+              </button>
               <select
                 value={status}
                 onChange={(e) => onStatusChange(application._id, e.target.value)}
