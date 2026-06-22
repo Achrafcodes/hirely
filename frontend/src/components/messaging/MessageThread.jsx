@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isSameDay } from 'date-fns';
 import { useSocket } from '../../context/SocketContext';
 import { useAuth } from '../../context/AuthContext';
@@ -27,27 +27,35 @@ export default function MessageThread({ conversation, onBack }) {
   const bottomRef = useRef(null);
 
   const conversationId = conversation?.id;
-
-  const scrollToBottom = useCallback(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  const prevConversationId = useRef(null);
 
   useEffect(() => {
     if (!conversationId) return;
     setLoading(true);
     api.getMessages(conversationId)
-      .then((res) => setMessages(res.data))
+      .then((res) => {
+        setMessages(res.data);
+        // Instant jump (no animation) only on initial load
+        requestAnimationFrame(() => {
+          bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+        });
+      })
       .finally(() => setLoading(false));
+    prevConversationId.current = conversationId;
   }, [conversationId]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
 
   useEffect(() => {
     if (!socket || !conversationId) return;
     socket.emit('join_conversation', conversationId);
-    const handler = (msg) => setMessages((prev) => [...prev, msg]);
+    const handler = (msg) => {
+      setMessages((prev) => [...prev, msg]);
+      // Only scroll for incoming messages if user is already near the bottom
+      const el = bottomRef.current?.parentElement;
+      if (el) {
+        const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+        if (nearBottom) bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+      }
+    };
     socket.on('new_message', handler);
     return () => {
       socket.off('new_message', handler);
@@ -58,12 +66,16 @@ export default function MessageThread({ conversation, onBack }) {
   const handleSend = async (content) => {
     setSending(true);
     try {
-      await api.sendMessage({ conversationId, content });
-      // Message arrives via socket; if socket not available, fetch
+      const res = await api.sendMessage({ conversationId, content });
       if (!socket) {
-        const res = await api.getMessages(conversationId);
-        setMessages(res.data);
+        const history = await api.getMessages(conversationId);
+        setMessages(history.data);
+      } else {
+        setMessages((prev) => [...prev, res.data.message]);
       }
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+      });
     } finally {
       setSending(false);
     }
