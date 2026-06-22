@@ -28,6 +28,23 @@ export default function MessageThread({ conversation, onBack }) {
 
   const conversationId = conversation?.id;
 
+  const playNotif = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.18);
+    } catch {}
+  };
+
   const scrollToBottom = () => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
@@ -56,8 +73,11 @@ export default function MessageThread({ conversation, onBack }) {
     join();
 
     const handler = (msg) => {
-      setMessages((prev) => prev.some((m) => m._id === msg._id) ? prev : [...prev, msg]);
-      // Defer scroll until after React has painted the new bubble
+      setMessages((prev) => {
+        if (prev.some((m) => m._id === msg._id)) return prev;
+        playNotif();
+        return [...prev, msg];
+      });
       requestAnimationFrame(() => {
         const el = scrollRef.current;
         if (!el) return;
