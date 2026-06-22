@@ -53,7 +53,9 @@ export default function MessageThread({ conversation, onBack }) {
 
   useEffect(() => {
     if (!loading && messages.length > 0) {
-      requestAnimationFrame(scrollToBottom);
+      // Double rAF: first frame commits layout, second frame scrolls after
+      // the container has its final computed height
+      requestAnimationFrame(() => requestAnimationFrame(scrollToBottom));
     }
   }, [loading]);
 
