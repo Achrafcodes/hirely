@@ -7,11 +7,6 @@ import Input from '../components/ui/Input';
 import GoogleButton from '../components/ui/GoogleButton';
 import useSEO from '../hooks/useSEO';
 
-const BoltIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-);
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -50,8 +45,8 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-white">
-              <BoltIcon />
+            <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-base">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="2" width="4" height="20" rx="1"/><rect x="17" y="2" width="4" height="20" rx="1"/><polygon points="7,10.5 17,7 17,11 7,14.5"/></svg>
             </div>
             <span className="text-base font-semibold text-text-primary">Hustl</span>
           </Link>
