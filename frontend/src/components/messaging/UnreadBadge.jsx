@@ -14,13 +14,17 @@ export default function UnreadBadge() {
 
   useEffect(() => {
     if (!socket) return;
-    const handler = () => {
-      api.getUnreadCount()
-        .then((res) => setCount(res.data.unread))
-        .catch(() => {});
+    const onNew = () => setCount((c) => c + 1);
+    const onRead = () => {
+      // Re-fetch the accurate total after marking read
+      api.getUnreadCount().then((res) => setCount(res.data.unread)).catch(() => {});
     };
-    socket.on('new_message', handler);
-    return () => socket.off('new_message', handler);
+    socket.on('new_message', onNew);
+    socket.on('messages_read', onRead);
+    return () => {
+      socket.off('new_message', onNew);
+      socket.off('messages_read', onRead);
+    };
   }, [socket]);
 
   if (count === 0) return null;

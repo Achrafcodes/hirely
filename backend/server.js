@@ -46,6 +46,9 @@ if (process.env.NODE_ENV !== 'test') {
   });
 
   io.on('connection', (socket) => {
+    // Each socket joins its own personal room for direct notifications
+    socket.join(`user:${socket.userId}`);
+
     socket.on('join_conversation', (conversationId) => {
       socket.join(conversationId);
     });

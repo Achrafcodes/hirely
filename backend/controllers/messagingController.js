@@ -144,7 +144,14 @@ const sendMessage = async (req, res) => {
   // Emit via Socket.io if available
   const io = req.app.get('io');
   if (io) {
+    // Emit to conversation room (both participants if they have the thread open)
     io.to(conversationId.toString()).emit('new_message', message);
+    // Also emit to recipient's personal room so their navbar badge updates
+    // regardless of whether they have the conversation open
+    const recipientId = role === 'employer'
+      ? conversation.candidate.toString()
+      : conversation.employer.toString();
+    io.to(`user:${recipientId}`).emit('new_message', message);
   }
 
   res.status(201).json({ message });
