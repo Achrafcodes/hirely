@@ -40,7 +40,7 @@ export default function ApplicantRow({ application, onStatusChange }) {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap sm:shrink-0">
+            <div className="flex items-center gap-2 flex-wrap sm:shrink-0">
               {resumeUrl && (
                 <a
                   href={resumeUrl}
@@ -62,7 +62,7 @@ export default function ApplicantRow({ application, onStatusChange }) {
                 onChange={(e) => onStatusChange(application._id, e.target.value)}
                 className="rounded-full bg-surface-raised border border-border px-3 py-1.5 text-sm text-text-primary
                   focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1 focus:ring-offset-base
-                  transition-colors hover:border-text-disabled cursor-pointer"
+                  transition-colors hover:border-text-disabled cursor-pointer min-w-[110px]"
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s} className="capitalize">{s}</option>

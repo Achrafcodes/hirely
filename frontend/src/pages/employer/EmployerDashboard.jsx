@@ -135,8 +135,8 @@ export default function EmployerDashboard() {
 
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: '0ms' }}>
-      <div className="flex items-center justify-between mb-8">
-        <div>
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-8">
+        <div className="min-w-0">
           <h1 className="text-h1 text-text-primary">Your jobs</h1>
           <p className="text-body text-text-secondary mt-1">
             {jobs.length} posting{jobs.length !== 1 ? 's' : ''}
@@ -152,7 +152,7 @@ export default function EmployerDashboard() {
         </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null); }}
-          className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-base text-sm font-medium px-5 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
+          className="shrink-0 inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-base text-sm font-medium px-5 py-2.5 rounded-md transition-all duration-150 active:scale-[0.97]"
         >
           + Post a job
         </button>
@@ -198,7 +198,7 @@ export default function EmployerDashboard() {
         <div className="flex flex-col gap-3">
           {jobs.map((job) => (
             <div key={job._id} className="featured-card bg-surface rounded-xl border border-border p-5">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <Badge status={job.status}>{job.status}</Badge>
@@ -213,7 +213,7 @@ export default function EmployerDashboard() {
                     <span className="flex items-center gap-1"><UsersIcon /> {job.applicantCount || 0} applicant{job.applicantCount === 1 ? '' : 's'}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                <div className="flex items-center gap-2 flex-wrap sm:shrink-0 sm:justify-end">
                   <Link
                     to={`/dashboard/employer/jobs/${job._id}/applicants`}
                     className="text-sm text-accent hover:text-accent-hover transition-colors font-medium"

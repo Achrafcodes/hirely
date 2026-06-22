@@ -156,7 +156,7 @@ export default function LandingPage() {
 
       {/* ══════════════ HERO ══════════════ */}
       <section className="relative pt-20 pb-16 sm:pt-32 sm:pb-24">
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center px-4">
+        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center px-4 sm:px-6 lg:px-8">
 
           {/* Left — copy */}
           <div className="text-center lg:text-left">
@@ -364,7 +364,7 @@ export default function LandingPage() {
 
       {/* ══════════════ FINAL CTA ══════════════ */}
       <section className="py-10 sm:py-16 mb-6">
-        <div ref={ctaRef} className="reveal bg-surface border border-border rounded-lg p-10 sm:p-16 text-center">
+        <div ref={ctaRef} className="reveal bg-surface border border-border rounded-lg p-6 sm:p-16 text-center">
           <p className="font-mono text-caption text-accent uppercase mb-4">Ready?</p>
           <h2 className="font-sans text-text-primary font-medium mb-4"
             style={{ fontSize: 'clamp(1.6rem, 4vw, 2rem)' }}>

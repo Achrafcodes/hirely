@@ -277,7 +277,7 @@ export default function JobDetailPage() {
               <DollarIcon /> {salary}
             </span>
           )}
-          <span className="text-sm text-text-disabled ml-auto">Posted {postedDate}</span>
+          <span className="text-sm text-text-disabled sm:ml-auto w-full sm:w-auto">Posted {postedDate}</span>
         </div>
 
         {/* Description */}
