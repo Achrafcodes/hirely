@@ -88,7 +88,7 @@ export default function Navbar() {
               {user && <NavLink to={dashboardPath} className={navLinkClass}>Dashboard</NavLink>}
               {user && (
                 <NavLink to="/messages" className={navLinkClass}>
-                  <span className="relative inline-flex">
+                  <span className="relative inline-flex pr-3.5">
                     Messages
                     <UnreadBadge />
                   </span>
