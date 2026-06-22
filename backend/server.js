@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 
 const app = express();
 
-connectDB();
+if (process.env.NODE_ENV !== 'test') connectDB();
 
 // CORS — only allow the configured frontend origin
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',');
@@ -61,5 +61,9 @@ app.use((err, req, res, _next) => {
   res.status(status).json({ message });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = app;
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
