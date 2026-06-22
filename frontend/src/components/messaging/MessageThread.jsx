@@ -69,12 +69,12 @@ export default function MessageThread({ conversation, onBack }) {
         if (prev.some((m) => m._id === msg._id)) return prev;
         return [...prev, msg];
       });
+      const isMine = msg.sender?._id === user?._id || msg.sender === user?._id;
       requestAnimationFrame(() => {
-        if (isAtBottom()) {
+        if (isMine || isAtBottom()) {
           scrollToBottom();
           setNewMsgPill(false);
         } else {
-          // User is scrolled up — show the pill instead of force-scrolling
           setNewMsgPill(true);
         }
       });
@@ -101,14 +101,14 @@ export default function MessageThread({ conversation, onBack }) {
   const handleSend = async (content) => {
     setSending(true);
     try {
-      const res = await api.sendMessage({ conversationId, content });
+      await api.sendMessage({ conversationId, content });
       if (!socket) {
+        // No socket — refetch to show the sent message
         const history = await api.getMessages(conversationId);
         setMessages(history.data);
-      } else {
-        setMessages((prev) => [...prev, res.data.message]);
+        requestAnimationFrame(scrollToBottom);
       }
-      requestAnimationFrame(scrollToBottom);
+      // With socket: new_message event delivers the message — no optimistic add
       setNewMsgPill(false);
     } finally {
       setSending(false);
