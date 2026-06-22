@@ -10,9 +10,11 @@ export default function LoadingScreen() {
         <div className="relative w-20 h-20 flex items-center justify-center">
           <span className="absolute inset-0 rounded-2xl border-2 border-accent/30 animate-ping" style={{ animationDuration: '1.6s' }} />
           <span className="absolute -inset-2 rounded-3xl border border-accent/20 animate-spin" style={{ animationDuration: '3s' }} />
-          <div className="relative w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-white shadow-[0_8px_30px_rgba(232,160,48,0.35)] animate-fade-in-up">
+          <div className="relative w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-base shadow-[0_8px_30px_rgba(232,160,48,0.35)] animate-fade-in-up">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              <rect x="3" y="2" width="4" height="20" rx="1"/>
+              <rect x="17" y="2" width="4" height="20" rx="1"/>
+              <polygon points="7,10.5 17,7 17,11 7,14.5"/>
             </svg>
           </div>
         </div>
