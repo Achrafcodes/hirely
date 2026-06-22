@@ -57,11 +57,13 @@ export default function MessageThread({ conversation, onBack }) {
 
     const handler = (msg) => {
       setMessages((prev) => prev.some((m) => m._id === msg._id) ? prev : [...prev, msg]);
-      const el = scrollRef.current;
-      if (el) {
-        const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+      // Defer scroll until after React has painted the new bubble
+      requestAnimationFrame(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
         if (nearBottom) el.scrollTop = el.scrollHeight;
-      }
+      });
     };
 
     socket.on('new_message', handler);
