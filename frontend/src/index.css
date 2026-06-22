@@ -114,6 +114,7 @@ html.light .bg-base\/80           { background-color: rgba(248,247,245,0.8) !imp
 html.light .bg-surface            { background-color: #FFFFFF !important; }
 html.light .bg-surface\/80        { background-color: rgba(255,255,255,0.8) !important; }
 html.light .bg-surface-raised     { background-color: #F0EEE9 !important; }
+html.light .bg-surface-inset      { background-color: #F4F2EE !important; }
 html.light .bg-accent\/10         { background-color: rgba(232,160,48,0.10) !important; }
 html.light .bg-accent\/15         { background-color: rgba(232,160,48,0.15) !important; }
 html.light .bg-accent\/30         { background-color: rgba(232,160,48,0.30) !important; }
