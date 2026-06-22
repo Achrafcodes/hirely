@@ -23,7 +23,11 @@ export default function AuthCallbackPage() {
       .then((res) => {
         setUserFromToken(res.data);
         const user = res.data;
-        navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate', { replace: true });
+        if (!user.onboardingComplete) {
+          navigate('/onboarding', { replace: true });
+        } else {
+          navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate', { replace: true });
+        }
       })
       .catch(() => {
         localStorage.removeItem('token');

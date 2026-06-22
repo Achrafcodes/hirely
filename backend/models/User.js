@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ['employer', 'candidate'], required: true },
     googleId: { type: String, sparse: true },
     avatar: String,
+    onboardingComplete: { type: Boolean, default: false },
 
     // candidate fields
     skills: [String],

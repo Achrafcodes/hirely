@@ -33,6 +33,7 @@ exports.register = async (req, res) => {
     companyName, companyDesc, website,
     verificationToken,
     verificationTokenExpiry,
+    onboardingComplete: true,
   });
 
   try {
@@ -104,6 +105,27 @@ exports.login = async (req, res) => {
 
 exports.getMe = (req, res) => {
   res.json(req.user);
+};
+
+exports.completeOnboarding = async (req, res) => {
+  const { role, skills, location, companyName, companyDesc, website } = req.body;
+
+  const allowed = ['employer', 'candidate'].includes(role) ? role : undefined;
+  const update = { onboardingComplete: true };
+
+  if (allowed) update.role = allowed;
+  if (role === 'candidate') {
+    if (Array.isArray(skills)) update.skills = skills;
+    if (location) update.location = location;
+  }
+  if (role === 'employer') {
+    if (companyName) update.companyName = companyName;
+    if (companyDesc) update.companyDesc = companyDesc;
+    if (website) update.website = website;
+  }
+
+  const user = await User.findByIdAndUpdate(req.user._id, update, { new: true });
+  res.json(user);
 };
 
 exports.uploadResume = async (req, res) => {

@@ -5,7 +5,7 @@ const loginRateLimiter = require('../middleware/loginRateLimiter');
 const validate = require('../middleware/validate');
 const upload = require('../middleware/upload');
 const requireRole = require('../middleware/requireRole');
-const { register, login, getMe, updateMe, uploadResume, verifyEmail, resendVerification } = require('../controllers/authController');
+const { register, login, getMe, updateMe, uploadResume, verifyEmail, resendVerification, completeOnboarding } = require('../controllers/authController');
 
 const profileLimits = validate({
   name:        { max: 100,  label: 'Name' },
@@ -25,5 +25,6 @@ router.post('/resend-verification', verifyToken, asyncHandler(resendVerification
 router.get('/me', verifyToken, asyncHandler(getMe));
 router.patch('/me', verifyToken, profileLimits, asyncHandler(updateMe));
 router.post('/me/resume', verifyToken, requireRole('candidate'), upload.single('resume'), asyncHandler(uploadResume));
+router.post('/onboarding', verifyToken, asyncHandler(completeOnboarding));
 
 module.exports = router;

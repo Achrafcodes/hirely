@@ -17,6 +17,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MessagesPage from './pages/MessagesPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
+import OnboardingPage from './pages/OnboardingPage';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
         <Route path="verify-email/:token" element={<VerifyEmailPage />} />
         <Route path="auth/callback" element={<AuthCallbackPage />} />
+        <Route path="onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
 
         <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />

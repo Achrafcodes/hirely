@@ -17,6 +17,7 @@ export const uploadResume = (formData) =>
   api.post('/auth/me/resume', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 export const verifyEmail = (token) => api.get(`/auth/verify-email/${token}`);
 export const resendVerification = () => api.post('/auth/resend-verification');
+export const completeOnboarding = (data) => api.post('/auth/onboarding', data);
 
 // Jobs
 export const getStats = () => api.get('/jobs/stats');
