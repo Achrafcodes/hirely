@@ -49,7 +49,7 @@ export default function ProfilePage() {
       await updateUser(payload);
       toast.success('Profile saved');
     } catch (err) {
-      setError(err.response?.data?.message || 'Update failed');
+      toast.error(err.response?.data?.message || 'Update failed');
     } finally {
       setLoading(false);
     }
@@ -134,8 +134,6 @@ export default function ProfilePage() {
               </div>
             </>
           )}
-
-          {error && <p className="text-sm text-danger">{error}</p>}
 
           <button
             type="submit"

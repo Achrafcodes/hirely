@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { getMyApplications, withdrawApplication, getSavedJobs } from '../../api';
 import ApplicationCard from '../../components/applications/ApplicationCard';
 import JobCard from '../../components/jobs/JobCard';
+import ConfirmDialog from '../../components/ui/ConfirmDialog';
 import { RowListSkeleton, JobListSkeleton } from '../../components/ui/Skeleton';
 import useSEO from '../../hooks/useSEO';
 import { useAuth } from '../../context/AuthContext';
@@ -18,6 +19,7 @@ export default function CandidateDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [withdrawTarget, setWithdrawTarget] = useState(null);
 
   const fetchApplications = async (s = statusFilter) => {
     setLoading(true);
@@ -60,11 +62,11 @@ export default function CandidateDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedCount]);
 
-  const handleWithdraw = async (id) => {
-    if (!confirm('Withdraw this application?')) return;
+  const handleWithdraw = async () => {
     try {
-      await withdrawApplication(id);
+      await withdrawApplication(withdrawTarget);
       toast.success('Application withdrawn');
+      setWithdrawTarget(null);
       fetchApplications();
     } catch {
       toast.error('Failed to withdraw application');
@@ -143,7 +145,7 @@ export default function CandidateDashboard() {
         ) : (
           <div className="flex flex-col gap-3">
             {applications.map((app) => (
-              <ApplicationCard key={app._id} application={app} onWithdraw={handleWithdraw} />
+              <ApplicationCard key={app._id} application={app} onWithdraw={(id) => setWithdrawTarget(id)} />
             ))}
           </div>
         )
@@ -159,6 +161,16 @@ export default function CandidateDashboard() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!withdrawTarget}
+        title="Withdraw application?"
+        message="You can reapply later, but your current application will be removed."
+        confirmLabel="Withdraw"
+        danger
+        onConfirm={handleWithdraw}
+        onCancel={() => setWithdrawTarget(null)}
+      />
     </div>
   );
 }

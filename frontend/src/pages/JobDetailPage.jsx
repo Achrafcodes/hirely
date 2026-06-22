@@ -162,7 +162,7 @@ export default function JobDetailPage() {
       setShowApplyForm(false);
       toast.success('Application submitted!');
     } catch (err) {
-      setError(err.response?.data?.message || 'Application failed');
+      toast.error(err.response?.data?.message || 'Application failed');
     } finally {
       setApplying(false);
     }
@@ -334,7 +334,6 @@ export default function JobDetailPage() {
                       file:cursor-pointer hover:file:bg-border transition-colors"
                   />
                 </div>
-                {error && <p className="text-sm text-danger">{error}</p>}
                 <div className="flex gap-3">
                   <button
                     type="submit"
@@ -372,7 +371,6 @@ export default function JobDetailPage() {
                 <p className="text-caption text-text-disabled">
                   Uses the resume saved on your profile. <Link to="/profile" className="text-accent hover:text-accent-hover transition-colors">Update it</Link>
                 </p>
-                {error && <p className="text-sm text-danger">{error}</p>}
               </div>
             ) : (
               <button

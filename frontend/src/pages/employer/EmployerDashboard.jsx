@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { getMyJobs, createJob, updateJob, deleteJob } from '../../api';
 import JobForm from '../../components/jobs/JobForm';
 import Badge from '../../components/ui/Badge';
+import ConfirmDialog from '../../components/ui/ConfirmDialog';
 import { RowListSkeleton } from '../../components/ui/Skeleton';
 import useSEO from '../../hooks/useSEO';
 import { useAuth } from '../../context/AuthContext';
@@ -42,6 +43,7 @@ export default function EmployerDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const fetchMyJobs = async () => {
     setLoading(true);
@@ -86,11 +88,11 @@ export default function EmployerDashboard() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm('Delete this job?')) return;
+  const handleDelete = async () => {
     try {
-      await deleteJob(id);
+      await deleteJob(deleteTarget);
       toast.success('Job deleted');
+      setDeleteTarget(null);
       fetchMyJobs();
     } catch {
       toast.error('Failed to delete job. Please try again.');
@@ -231,7 +233,7 @@ export default function EmployerDashboard() {
                     {job.status === 'active' ? 'Close' : 'Reopen'}
                   </button>
                   <button
-                    onClick={() => handleDelete(job._id)}
+                    onClick={() => setDeleteTarget(job._id)}
                     className="text-sm px-3 py-1.5 rounded-md bg-danger/10 border border-danger/30 text-danger hover:bg-danger/20 transition-all"
                   >
                     Delete
@@ -242,6 +244,16 @@ export default function EmployerDashboard() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete job posting?"
+        message="This will permanently remove the job and all its applicants. This can't be undone."
+        confirmLabel="Delete"
+        danger
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

@@ -39,7 +39,7 @@ export default function RegisterPage() {
       toast.success('Account created!');
       navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      toast.error(err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            {error && <p className="text-sm text-danger">{error}</p>}
+
             <button
               type="submit"
               disabled={loading}

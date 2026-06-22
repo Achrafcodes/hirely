@@ -30,7 +30,7 @@ export default function LoginPage() {
       toast.success(`Welcome back, ${user.name}!`);
       navigate(user.role === 'employer' ? '/dashboard/employer' : '/dashboard/candidate');
     } catch (err) {
-      setError(err.response?.data?.message || 'Sign in failed');
+      toast.error(err.response?.data?.message || 'Sign in failed');
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function LoginPage() {
               autoComplete="current-password"
               placeholder="••••••••"
             />
-            {error && <p className="text-sm text-danger">{error}</p>}
+
             <button
               type="submit"
               disabled={loading}
