@@ -51,7 +51,10 @@ export default function MessageThread({ conversation, onBack }) {
 
   useEffect(() => {
     if (!socket || !conversationId) return;
-    socket.emit('join_conversation', conversationId);
+
+    const join = () => socket.emit('join_conversation', conversationId);
+    join();
+
     const handler = (msg) => {
       setMessages((prev) => prev.some((m) => m._id === msg._id) ? prev : [...prev, msg]);
       const el = scrollRef.current;
@@ -60,9 +63,14 @@ export default function MessageThread({ conversation, onBack }) {
         if (nearBottom) el.scrollTop = el.scrollHeight;
       }
     };
+
     socket.on('new_message', handler);
+    // Re-join room after a socket reconnect (room membership is lost on disconnect)
+    socket.on('connect', join);
+
     return () => {
       socket.off('new_message', handler);
+      socket.off('connect', join);
       socket.emit('leave_conversation', conversationId);
     };
   }, [socket, conversationId]);
@@ -93,10 +101,13 @@ export default function MessageThread({ conversation, onBack }) {
     );
   }
 
+  // Sort ascending so out-of-order socket arrivals don't scramble the view
+  const sorted = [...messages].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
   // Group messages by date for dividers
   const grouped = [];
-  messages.forEach((msg, i) => {
-    const prev = messages[i - 1];
+  sorted.forEach((msg, i) => {
+    const prev = sorted[i - 1];
     if (!prev || !isSameDay(new Date(prev.createdAt), new Date(msg.createdAt))) {
       grouped.push({ type: 'divider', date: msg.createdAt, key: `d-${msg._id}` });
     }

@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import * as api from '../api';
+import { useSocket } from '../context/SocketContext';
 import ConversationList from '../components/messaging/ConversationList';
 import MessageThread from '../components/messaging/MessageThread';
 
 export default function MessagesPage() {
+  const { socket } = useSocket();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeConversation, setActiveConversation] = useState(null);
   const [showThread, setShowThread] = useState(false);
   const [searchParams] = useSearchParams();
+  const activeConversationRef = useRef(null);
 
   useEffect(() => {
     api.getConversations()
@@ -30,12 +33,33 @@ export default function MessagesPage() {
 
   const handleSelect = (conversation) => {
     setActiveConversation(conversation);
+    activeConversationRef.current = conversation;
     setShowThread(true);
-    // Mark as read locally
     setConversations((prev) =>
       prev.map((c) => (c.id === conversation.id ? { ...c, unreadCount: 0 } : c))
     );
   };
+
+  // Keep sidebar in sync with real-time messages from all conversations
+  useEffect(() => {
+    if (!socket) return;
+    const handler = (msg) => {
+      const cid = msg.conversation?.toString() || msg.conversation;
+      setConversations((prev) =>
+        prev.map((c) => {
+          if (c.id !== cid) return c;
+          const isActive = activeConversationRef.current?.id === cid;
+          return {
+            ...c,
+            lastMessage: { content: msg.content, createdAt: msg.createdAt },
+            unreadCount: isActive ? 0 : (c.unreadCount || 0) + 1,
+          };
+        })
+      );
+    };
+    socket.on('new_message', handler);
+    return () => socket.off('new_message', handler);
+  }, [socket]);
 
   return (
     <div className="animate-fade-in-up">
