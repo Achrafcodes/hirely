@@ -35,14 +35,19 @@ export default function MessageThread({ conversation, onBack }) {
 
   useEffect(() => {
     if (!conversationId) return;
+    setMessages([]);
     setLoading(true);
     api.getMessages(conversationId)
-      .then((res) => {
-        setMessages(res.data);
-        requestAnimationFrame(scrollToBottom);
-      })
+      .then((res) => setMessages(res.data))
       .finally(() => setLoading(false));
   }, [conversationId]);
+
+  // Scroll after messages render (loading just turned false and messages painted)
+  useEffect(() => {
+    if (!loading && messages.length > 0) {
+      requestAnimationFrame(scrollToBottom);
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (!socket || !conversationId) return;
