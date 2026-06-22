@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { resendVerification } from '../api';
 import Input from '../components/ui/Input';
+import GoogleButton from '../components/ui/GoogleButton';
 import useSEO from '../hooks/useSEO';
 
 const BoltIcon = () => (
@@ -98,6 +99,14 @@ export default function LoginPage() {
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-sm text-text-disabled">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <GoogleButton />
         </div>
 
         <p className="mt-5 text-center text-sm text-text-secondary">

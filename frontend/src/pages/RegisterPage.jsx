@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { resendVerification } from '../api';
 import Input from '../components/ui/Input';
+import GoogleButton from '../components/ui/GoogleButton';
 import useSEO from '../hooks/useSEO';
 
 function CheckEmailScreen({ email }) {
@@ -147,6 +148,14 @@ export default function RegisterPage() {
               {loading ? 'Creating account…' : 'Create account'}
             </button>
           </form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-sm text-text-disabled">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <GoogleButton role={role} label={`Continue with Google as ${role}`} />
         </div>
 
         <p className="mt-5 text-center text-sm text-text-secondary">

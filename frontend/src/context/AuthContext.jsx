@@ -74,8 +74,10 @@ export function AuthProvider({ children }) {
 
   const isJobSaved = (jobId) => user?.savedJobs?.some((id) => String(id) === String(jobId)) ?? false;
 
+  const setUserFromToken = (userData) => setUser(userData);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, uploadResume, toggleSaveJob, isJobSaved }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, uploadResume, toggleSaveJob, isJobSaved, setUserFromToken }}>
       {children}
     </AuthContext.Provider>
   );

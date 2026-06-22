@@ -63,6 +63,10 @@ app.use(express.json({ limit: '10kb' }));
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
 
+if (process.env.NODE_ENV !== 'test') {
+  require('./config/passport');
+  app.use('/api/auth/google', require('./routes/googleAuth'));
+}
 app.use('/api/auth',         require('./routes/auth'));
 app.use('/api/jobs',         require('./routes/jobs'));
 app.use('/api/companies',    require('./routes/companies'));
