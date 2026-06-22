@@ -21,7 +21,6 @@ function ThreadSkeleton() {
 export default function MessageThread({ conversation, onBack }) {
   const { user } = useAuth();
   const { socket } = useSocket();
-  const location = useLocation();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
