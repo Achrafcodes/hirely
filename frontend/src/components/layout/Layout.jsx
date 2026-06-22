@@ -9,7 +9,7 @@ export default function Layout() {
     <div className="min-h-screen bg-base flex flex-col">
       <ScrollToTop />
       <Navbar />
-      <main className="mx-auto max-w-6xl w-full px-4 py-8 sm:px-6 flex-1">
+      <main className="mx-auto max-w-6xl w-full px-4 sm:px-6 lg:px-8 py-8 flex-1">
         <Outlet />
       </main>
       <Footer />
