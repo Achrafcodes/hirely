@@ -64,20 +64,34 @@ export default function OnboardingPage() {
           <div>
             <p className="text-sm font-medium text-text-secondary mb-2">I'm joining as a</p>
             <div className="grid grid-cols-2 gap-3">
-              {['candidate', 'employer'].map((r) => (
                 <button
-                  key={r}
-                  type="button"
-                  onClick={() => setRole(r)}
-                  className={`py-3 rounded-lg border text-sm font-medium transition-all duration-150 capitalize ${
-                    role === r
-                      ? 'bg-accent-dim border-accent/50 text-accent-text'
-                      : 'bg-surface border-border text-text-secondary hover:border-text-disabled'
-                  }`}
-                >
-                  {r === 'candidate' ? '🎯 Job seeker' : '🏢 Employer'}
-                </button>
-              ))}
+                type="button"
+                onClick={() => setRole('candidate')}
+                className={`flex items-center justify-center gap-2 py-3 rounded-lg border text-sm font-medium transition-all duration-150 ${
+                  role === 'candidate'
+                    ? 'bg-accent-dim border-accent/50 text-accent-text'
+                    : 'bg-surface border-border text-text-secondary hover:border-text-disabled'
+                }`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                Job seeker
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('employer')}
+                className={`flex items-center justify-center gap-2 py-3 rounded-lg border text-sm font-medium transition-all duration-150 ${
+                  role === 'employer'
+                    ? 'bg-accent-dim border-accent/50 text-accent-text'
+                    : 'bg-surface border-border text-text-secondary hover:border-text-disabled'
+                }`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+                Employer
+              </button>
             </div>
           </div>
 
