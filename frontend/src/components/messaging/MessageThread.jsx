@@ -65,11 +65,19 @@ export default function MessageThread({ conversation, onBack }) {
     };
 
     socket.on('new_message', handler);
+
+    const readHandler = ({ conversationId: cid }) => {
+      if (cid !== conversationId) return;
+      setMessages((prev) => prev.map((m) => ({ ...m, read: true })));
+    };
+    socket.on('messages_read', readHandler);
+
     // Re-join room after a socket reconnect (room membership is lost on disconnect)
     socket.on('connect', join);
 
     return () => {
       socket.off('new_message', handler);
+      socket.off('messages_read', readHandler);
       socket.off('connect', join);
       socket.emit('leave_conversation', conversationId);
     };
@@ -138,7 +146,7 @@ export default function MessageThread({ conversation, onBack }) {
       {loading ? (
         <ThreadSkeleton />
       ) : (
-        <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4">
+        <div ref={scrollRef} className="messages-scroll flex-1 overflow-y-auto px-5 py-4">
           {grouped.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <p className="text-sm text-text-disabled">No messages yet. Say hello!</p>
@@ -152,6 +160,7 @@ export default function MessageThread({ conversation, onBack }) {
                   key={item.key}
                   message={item.msg}
                   isSent={item.msg.sender?._id === user?._id || item.msg.sender === user?._id}
+                  read={item.msg.read}
                 />
               )
             )

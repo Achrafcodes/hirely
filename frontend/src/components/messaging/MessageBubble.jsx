@@ -16,27 +16,32 @@ export function DateDivider({ date }) {
   );
 }
 
-export default function MessageBubble({ message, isSent }) {
+export default function MessageBubble({ message, isSent, read }) {
   const time = format(new Date(message.createdAt), 'h:mm a');
 
   return (
-    <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-2`}>
-      <div className="max-w-[72%]">
+    <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-1`}>
+      <div className="max-w-[75%] md:max-w-[60%]">
         <div
           className={`px-3.5 py-2.5 text-sm leading-relaxed ${
             isSent
-              ? 'bg-accent-dim text-accent-text'
+              ? 'bg-accent text-base'
               : 'bg-surface-raised text-text-primary'
           }`}
           style={{
-            borderRadius: isSent ? '8px 8px 2px 8px' : '8px 8px 8px 2px',
+            borderRadius: isSent ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
           }}
         >
           {message.content}
         </div>
-        <p className={`font-mono text-[10px] text-text-disabled mt-1 ${isSent ? 'text-right' : 'text-left'}`}>
-          {time}
-        </p>
+        <div className={`flex items-center gap-1 mt-1 ${isSent ? 'justify-end' : 'justify-start'}`}>
+          <p className="font-mono text-[10px] text-text-disabled">{time}</p>
+          {isSent && (
+            <span className="font-mono text-[10px]" style={{ color: read ? '#E8A030' : '#6B6B6B' }}>
+              {read ? '✓✓' : '✓'}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

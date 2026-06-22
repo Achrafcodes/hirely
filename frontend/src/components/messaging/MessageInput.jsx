@@ -28,7 +28,7 @@ export default function MessageInput({ onSend, disabled }) {
   };
 
   return (
-    <div className="border-t border-border bg-base px-4 py-3 flex items-end gap-3">
+    <div className="flex-shrink-0 border-t border-border bg-base px-4 py-3 flex items-end gap-3">
       <textarea
         ref={textareaRef}
         value={content}

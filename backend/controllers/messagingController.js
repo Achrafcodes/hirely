@@ -98,6 +98,12 @@ const getMessages = async (req, res) => {
   const unreadField = role === 'employer' ? 'unreadEmployer' : 'unreadCandidate';
   await Conversation.findByIdAndUpdate(conversationId, { [unreadField]: 0 });
 
+  // Notify the other participant that their messages were read
+  const io = req.app.get('io');
+  if (io) {
+    io.to(conversationId.toString()).emit('messages_read', { conversationId, readBy: userId });
+  }
+
   res.json(messages);
 };
 

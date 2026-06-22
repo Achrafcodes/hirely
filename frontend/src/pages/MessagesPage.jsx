@@ -63,10 +63,7 @@ export default function MessagesPage() {
 
   return (
     <div className="animate-fade-in-up">
-      <div
-        className="flex border border-border rounded-lg overflow-hidden"
-        style={{ height: 'calc(100vh - 120px)' }}
-      >
+      <div className="flex border border-border rounded-lg overflow-hidden" style={{ height: 'calc(100dvh - 120px)' }}>
         {/* Conversation list — hidden on mobile when thread is open */}
         <div className={`w-full md:w-80 flex-shrink-0 ${showThread ? 'hidden md:flex md:flex-col' : 'flex flex-col'}`}>
           <ConversationList
