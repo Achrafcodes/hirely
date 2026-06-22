@@ -6,17 +6,25 @@ import * as api from '../../api';
 const playNotif = () => {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.18);
+    const t = ctx.currentTime;
+
+    const ping = (freq, startAt, dur) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, startAt);
+      gain.gain.linearRampToValueAtTime(0.12, startAt + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, startAt + dur);
+      osc.start(startAt);
+      osc.stop(startAt + dur);
+    };
+
+    // Two soft ascending notes — like a gentle chime
+    ping(1047, t, 0.25);       // C6
+    ping(1319, t + 0.1, 0.3);  // E6
   } catch {}
 };
 
