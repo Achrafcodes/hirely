@@ -24,10 +24,14 @@ export default function MessageThread({ conversation, onBack }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const bottomRef = useRef(null);
+  const scrollRef = useRef(null);
 
   const conversationId = conversation?.id;
-  const prevConversationId = useRef(null);
+
+  const scrollToBottom = () => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  };
 
   useEffect(() => {
     if (!conversationId) return;
@@ -35,25 +39,20 @@ export default function MessageThread({ conversation, onBack }) {
     api.getMessages(conversationId)
       .then((res) => {
         setMessages(res.data);
-        // Instant jump (no animation) only on initial load
-        requestAnimationFrame(() => {
-          bottomRef.current?.scrollIntoView({ behavior: 'instant' });
-        });
+        requestAnimationFrame(scrollToBottom);
       })
       .finally(() => setLoading(false));
-    prevConversationId.current = conversationId;
   }, [conversationId]);
 
   useEffect(() => {
     if (!socket || !conversationId) return;
     socket.emit('join_conversation', conversationId);
     const handler = (msg) => {
-      setMessages((prev) => [...prev, msg]);
-      // Only scroll for incoming messages if user is already near the bottom
-      const el = bottomRef.current?.parentElement;
+      setMessages((prev) => prev.some((m) => m._id === msg._id) ? prev : [...prev, msg]);
+      const el = scrollRef.current;
       if (el) {
         const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
-        if (nearBottom) bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+        if (nearBottom) el.scrollTop = el.scrollHeight;
       }
     };
     socket.on('new_message', handler);
@@ -73,9 +72,7 @@ export default function MessageThread({ conversation, onBack }) {
       } else {
         setMessages((prev) => [...prev, res.data.message]);
       }
-      requestAnimationFrame(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'instant' });
-      });
+      requestAnimationFrame(scrollToBottom);
     } finally {
       setSending(false);
     }
@@ -125,7 +122,7 @@ export default function MessageThread({ conversation, onBack }) {
       {loading ? (
         <ThreadSkeleton />
       ) : (
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4">
           {grouped.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <p className="text-sm text-text-disabled">No messages yet. Say hello!</p>
@@ -143,7 +140,6 @@ export default function MessageThread({ conversation, onBack }) {
               )
             )
           )}
-          <div ref={bottomRef} />
         </div>
       )}
 
