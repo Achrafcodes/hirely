@@ -12,7 +12,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'hirely/resumes',
+    folder: 'hustl/resumes',
     allowed_formats: ['pdf', 'doc', 'docx'],
     resource_type: 'raw',
   },
